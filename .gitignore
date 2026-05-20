@@ -1,2 +1,14 @@
-/.vscode
+# Build output
+build/*
 *.exe
+*.out
+
+# CMake
+CMakeFiles/
+CMakeLists.txt
+
+# VS Code
+.vscode/*
+
+# SFML runtime artifacts
+*.dll
