@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <iostream>
 
 int main() {
     // Window settings
@@ -96,9 +97,25 @@ int main() {
 
     // Main loop
     while (window.isOpen()){
-        while (auto event = window.pollEvent()){
-            if (event->is<sf::Event::Closed>())
+        while (auto event = window.pollEvent()) {
+            // Close window
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
+            }
+            
+            // Mouse click
+            if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()) {
+                if (mousePressed->button == sf::Mouse::Button::Left) {
+                    auto mousePos = sf::Mouse::getPosition(window);
+                    int col = (mousePos.x - OFFSET_X) / TILE_SIZE;
+                    int row = (mousePos.y - OFFSET_Y) / TILE_SIZE;
+                    if (row >= 0 && row < 8 && col >= 0 && col < 8) {
+                        std::cout << "Row: " << row << " Col: " << col << std::endl;
+                    } else {
+                        std::cout << "Invalid Square" << std::endl;
+                    } 
+                }
+            }
         }
 
         // Background
@@ -170,6 +187,18 @@ int main() {
         }
 
         window.display();
+
+        // if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+        //     auto mousePos = sf::Mouse::getPosition(window);
+        //     int col = (mousePos.x - OFFSET_X) / TILE_SIZE;
+        //     int row = (mousePos.y - OFFSET_Y) / TILE_SIZE;
+
+        //     if (row >= 0 && row < 8 && col >= 0 && col < 8)
+        //         std::cout << "row " << row << " col" << col << std::endl;
+        //     else
+        //         std::cout << "Invalid Square" << std::endl;
+        // }
+
     }
 
     return 0;
