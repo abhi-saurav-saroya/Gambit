@@ -14,12 +14,10 @@ class Board {
         bool hasSelection() const;
         std::pair<int,int> getSelection() const;
 
-        void movePiece(
-            int fromRow,
-            int fromCol,
-            int toRow,
-            int toCol
-        );
+        void movePiece(int fromRow, int fromCol, int toRow, int toCol);
+
+        std::vector<std::pair<int, int>> getLegalMoves(int row, int col) const;
+        bool isLegalMove(int fromRow, int fromCol, int toRow, int toCol) const;
     
     private:
         std::vector<std::vector<std::string>> grid;

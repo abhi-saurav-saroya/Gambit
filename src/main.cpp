@@ -44,8 +44,9 @@ int main() {
                         // SELECTION LOGIC
                         if (board.hasSelection()) {
                             auto [selectedRow, selectedCol] = board.getSelection();
-                        
-                            board.movePiece(selectedRow, selectedCol, row, col);
+                            if (board.isLegalMove(selectedRow, selectedCol, row, col)) {
+                                board.movePiece(selectedRow, selectedCol, row, col);
+                            }
                             board.clearSelection();
                         } else {
                             // Only select non-empty squares
