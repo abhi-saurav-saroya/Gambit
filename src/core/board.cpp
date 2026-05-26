@@ -37,3 +37,8 @@ bool Board::hasSelection() const {
 std::pair<int,int> Board::getSelection() const {
     return {selectedRow, selectedCol};
 }
+
+void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+    grid[toRow][toCol] = grid[fromRow][fromCol];
+    grid[fromRow][fromCol] = "";
+}

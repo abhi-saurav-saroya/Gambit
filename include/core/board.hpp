@@ -13,6 +13,13 @@ class Board {
     
         bool hasSelection() const;
         std::pair<int,int> getSelection() const;
+
+        void movePiece(
+            int fromRow,
+            int fromCol,
+            int toRow,
+            int toCol
+        );
     
     private:
         std::vector<std::vector<std::string>> grid;

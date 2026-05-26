@@ -43,12 +43,15 @@ int main() {
                     {
                         // SELECTION LOGIC
                         if (board.hasSelection()) {
-                            auto [r, c] = board.getSelection();
-                            std::cout << "Move from " << r << "," << c << " to " << row << "," << col << "\n";
+                            auto [selectedRow, selectedCol] = board.getSelection();
+                        
+                            board.movePiece(selectedRow, selectedCol, row, col);
                             board.clearSelection();
                         } else {
-                            board.selectSquare(row, col);
-                            std::cout << "Selected: " << row << "," << col << "\n";
+                            // Only select non-empty squares
+                            if (!board.getGrid()[row][col].empty()) {
+                                board.selectSquare(row, col);
+                            }
                         }
                     }
                 }
