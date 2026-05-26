@@ -4,8 +4,7 @@
 #include "input/InputHandler.hpp"
 #include <iostream>
 
-int main()
-{
+int main() {
     const int WINDOW_WIDTH = 1200;
     const int WINDOW_HEIGHT = 900;
 
@@ -17,7 +16,7 @@ int main()
 
     sf::RenderWindow window(
         sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}),
-        "Gambit"
+        "Gambit - Chess Engine"
     );
 
     Board board;
@@ -25,18 +24,13 @@ int main()
 
     renderer.loadTextures();
 
-    while (window.isOpen())
-    {
-        while (auto event = window.pollEvent())
-        {
+    while (window.isOpen()) {
+        while (auto event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>())
                 window.close();
 
-            if (const auto* mouse =
-                event->getIf<sf::Event::MouseButtonPressed>())
-            {
-                if (mouse->button == sf::Mouse::Button::Left)
-                {
+            if (const auto* mouse = event->getIf<sf::Event::MouseButtonPressed>()) {
+                if (mouse->button == sf::Mouse::Button::Left) {
                     int row, col;
 
                     if (InputHandler::getBoardSquare(
@@ -47,7 +41,15 @@ int main()
                         row,
                         col))
                     {
-                        std::cout << row << " " << col << "\n";
+                        // SELECTION LOGIC
+                        if (board.hasSelection()) {
+                            auto [r, c] = board.getSelection();
+                            std::cout << "Move from " << r << "," << c << " to " << row << "," << col << "\n";
+                            board.clearSelection();
+                        } else {
+                            board.selectSquare(row, col);
+                            std::cout << "Selected: " << row << "," << col << "\n";
+                        }
                     }
                 }
             }
@@ -56,7 +58,8 @@ int main()
         window.clear();
 
         renderer.render(window, board);
-
         window.display();
     }
+
+    return 0;
 }

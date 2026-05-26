@@ -1,6 +1,9 @@
 #include "core/Board.hpp"
 
 Board::Board() {
+    selectedRow = -1;
+    selectedCol = -1;
+
     grid = {
         {"BlackRook","BlackKnight","BlackBishop","BlackQueen","BlackKing","BlackBishop","BlackKnight","BlackRook"},
         {"BlackPawn","BlackPawn","BlackPawn","BlackPawn","BlackPawn","BlackPawn","BlackPawn","BlackPawn"},
@@ -15,4 +18,22 @@ Board::Board() {
 
 const std::vector<std::vector<std::string>>& Board::getGrid() const {
     return grid;
+}
+
+void Board::selectSquare(int row, int col) {
+    selectedRow = row;
+    selectedCol = col;
+}
+
+void Board::clearSelection() {
+    selectedRow = -1;
+    selectedCol = -1;
+}
+
+bool Board::hasSelection() const {
+    return selectedRow != -1;
+}
+
+std::pair<int,int> Board::getSelection() const {
+    return {selectedRow, selectedCol};
 }
