@@ -1,5 +1,6 @@
 #include "core/Board.hpp"
 #include "pieces/pawn.hpp"
+#include "pieces/knight.hpp"
 
 Board::Board() {
     selectedRow = -1;
@@ -49,6 +50,10 @@ std::vector<std::pair<int, int>> Board::getLegalMoves(int row, int col) const {
 
     if (piece == "WhitePawn" || piece == "BlackPawn") {
         return Pawn::getLegalMoves(grid, row, col);
+    }
+
+    if (piece == "WhiteKnight" || piece == "BlackKnight") {
+        return Knight::getLegalMoves(grid, row, col);
     }
 
     return {};
