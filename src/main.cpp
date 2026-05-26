@@ -57,7 +57,7 @@ int main() {
 
         window.clear();
 
-        renderer.render(window, board);
+        renderer.render(window, board, OFFSET_X, OFFSET_Y, TILE_SIZE);
         window.display();
     }
 

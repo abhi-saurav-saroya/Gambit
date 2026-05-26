@@ -36,13 +36,7 @@ void Renderer::loadTextures() {
     }
 }
 
-void Renderer::render(sf::RenderWindow& window, const Board& board) {
-    const int BOARD_SIZE = 800;
-    const int TILE_SIZE = BOARD_SIZE / 8;
-
-    const int OFFSET_X = 200;
-    const int OFFSET_Y = 50;
-
+void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X, int OFFSET_Y, int TILE_SIZE) {
     // draw board
     const auto& grid = board.getGrid();
     for (int row = 0; row < 8; row++) {
@@ -65,6 +59,29 @@ void Renderer::render(sf::RenderWindow& window, const Board& board) {
                 tile.setFillColor(sf::Color(181, 136, 99));
 
             window.draw(tile);
+
+            // highlight selected tile
+            if (board.hasSelection()) {
+                auto [selRow, selCol] = board.getSelection();
+
+                if (row == selRow && col == selCol) {
+                    sf::RectangleShape highlight(
+                        sf::Vector2f(
+                            static_cast<float>(TILE_SIZE),
+                            static_cast<float>(TILE_SIZE)
+                        )
+                    );
+
+                    highlight.setPosition({
+                        static_cast<float>(OFFSET_X + col * TILE_SIZE),
+                        static_cast<float>(OFFSET_Y + row * TILE_SIZE)
+                    });
+
+                    highlight.setFillColor(sf::Color(80, 255, 120, 120));
+
+                    window.draw(highlight);
+                }
+            }
 
             // draw piece
             const std::string& piece = grid[row][col];
