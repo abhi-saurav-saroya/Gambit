@@ -18,10 +18,15 @@ class Board {
 
         std::vector<std::pair<int, int>> getLegalMoves(int row, int col) const;
         bool isLegalMove(int fromRow, int fromCol, int toRow, int toCol) const;
+
+        bool isWhiteTurn() const;
+        void switchTurn();
+        bool isCurrentPlayersPiece(int row, int col) const;
     
     private:
         std::vector<std::vector<std::string>> grid;
     
         int selectedRow;
         int selectedCol;
+        bool whiteTurn;
 };

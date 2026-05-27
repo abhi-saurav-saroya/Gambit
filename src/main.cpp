@@ -23,6 +23,7 @@ int main() {
     Renderer renderer;
 
     renderer.loadTextures();
+    renderer.loadFonts();
 
     while (window.isOpen()) {
         while (auto event = window.pollEvent()) {
@@ -46,12 +47,14 @@ int main() {
                             auto [selectedRow, selectedCol] = board.getSelection();
                             if (board.isLegalMove(selectedRow, selectedCol, row, col)) {
                                 board.movePiece(selectedRow, selectedCol, row, col);
+                                board.switchTurn();
                             }
                             board.clearSelection();
                         } else {
-                            // Only select non-empty squares
                             if (!board.getGrid()[row][col].empty()) {
-                                board.selectSquare(row, col);
+                                if (board.isCurrentPlayersPiece(row, col)) {
+                                    board.selectSquare(row, col);
+                                }
                             }
                         }
                     }

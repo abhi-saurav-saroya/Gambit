@@ -9,6 +9,7 @@
 Board::Board() {
     selectedRow = -1;
     selectedCol = -1;
+    whiteTurn = true;
 
     grid = {
         {"BlackRook","BlackKnight","BlackBishop","BlackQueen","BlackKing","BlackBishop","BlackKnight","BlackRook"},
@@ -89,4 +90,27 @@ bool Board::isLegalMove(int fromRow, int fromCol, int toRow, int toCol) const {
     }
 
     return false;
+}
+
+bool Board::isWhiteTurn() const {
+    return whiteTurn;
+}
+
+void Board::switchTurn() {
+    whiteTurn = !whiteTurn;
+}
+
+bool Board::isCurrentPlayersPiece(int row, int col) const {
+    std::string piece = grid[row][col];
+
+    if (piece.empty())
+        return false;
+
+    // White turn
+    if (whiteTurn) {
+        return piece[0] == 'W';
+    }
+
+    // Black turn
+    return piece[0] == 'B';
 }
