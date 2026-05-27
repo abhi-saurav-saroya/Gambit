@@ -27,5 +27,35 @@ std::vector<std::pair<int,int>> Pawn::getLegalMoves(const std::vector<std::vecto
         }
     }
 
+    // Diagonal captures
+    int leftCol  = col - 1;
+    int rightCol = col + 1;
+
+    int nextRow;
+    if (piece == "WhitePawn")
+        nextRow = row - 1;
+    else
+        nextRow = row + 1;
+
+    // capture left
+    if (nextRow >= 0 && nextRow < 8 && leftCol >= 0) {
+        std::string target = grid[nextRow][leftCol];
+        // enemy piece exists
+        if (!target.empty() &&
+            target[0] != piece[0])
+        {
+            moves.push_back({nextRow, leftCol});
+        }
+    }
+
+    // capture right
+    if (nextRow >= 0 && nextRow < 8 && rightCol < 8) {
+        std::string target = grid[nextRow][rightCol];
+        // enemy piece exists
+        if (!target.empty() && target[0] != piece[0]) {
+            moves.push_back({nextRow, rightCol});
+        }
+    }
+
     return moves;
 }
