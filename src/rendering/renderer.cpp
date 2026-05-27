@@ -7,19 +7,8 @@ Renderer::Renderer() {
 
 void Renderer::loadTextures() {
     std::vector<std::string> pieceNames = {
-        "WhitePawn",
-        "WhiteRook",
-        "WhiteKnight",
-        "WhiteBishop",
-        "WhiteQueen",
-        "WhiteKing",
-
-        "BlackPawn",
-        "BlackRook",
-        "BlackKnight",
-        "BlackBishop",
-        "BlackQueen",
-        "BlackKing"
+        "WhitePawn", "WhiteRook", "WhiteKnight", "WhiteBishop", "WhiteQueen", "WhiteKing",
+        "BlackPawn", "BlackRook", "BlackKnight", "BlackBishop", "BlackQueen", "BlackKing"
     };
 
     for (const auto& piece : pieceNames) {
@@ -36,21 +25,26 @@ void Renderer::loadTextures() {
     }
 }
 
+void Renderer::loadFonts() {
+    if (!font.openFromFile("assets/fonts/Poppins-SemiBold.ttf")) {
+        std::cerr << "Failed to load font\n";
+    }
+}
+
 void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X, int OFFSET_Y, int TILE_SIZE) {
-    // draw board
     const auto& grid = board.getGrid();
+    
+    // DRAW BOARD TILES
     for (int row = 0; row < 8; row++) {
         for (int col = 0; col < 8; col++) {
+
             sf::RectangleShape tile(
-                sf::Vector2f(
-                    static_cast<float>(TILE_SIZE),
-                    static_cast<float>(TILE_SIZE)
-                )
+                sf::Vector2f((float)TILE_SIZE, (float)TILE_SIZE)
             );
 
             tile.setPosition({
-                static_cast<float>(OFFSET_X + col * TILE_SIZE),
-                static_cast<float>(OFFSET_Y + row * TILE_SIZE)
+                (float)(OFFSET_X + col * TILE_SIZE),
+                (float)(OFFSET_Y + row * TILE_SIZE)
             });
 
             if ((row + col) % 2 == 0)
@@ -59,50 +53,70 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
                 tile.setFillColor(sf::Color(181, 136, 99));
 
             window.draw(tile);
+        }
+    }
 
-            // highlight selected tile
-            if (board.hasSelection()) {
-                auto [selRow, selCol] = board.getSelection();
+    // HIGHLIGHT SELECTED SQUARE
+    if (board.hasSelection()) {
+        auto [selRow, selCol] = board.getSelection();
 
-                if (row == selRow && col == selCol) {
-                    sf::RectangleShape highlight(
-                        sf::Vector2f(
-                            static_cast<float>(TILE_SIZE),
-                            static_cast<float>(TILE_SIZE)
-                        )
-                    );
+        sf::RectangleShape highlight(
+            sf::Vector2f((float)TILE_SIZE, (float)TILE_SIZE)
+        );
 
-                    highlight.setPosition({
-                        static_cast<float>(OFFSET_X + col * TILE_SIZE),
-                        static_cast<float>(OFFSET_Y + row * TILE_SIZE)
-                    });
+        highlight.setPosition({
+            (float)(OFFSET_X + selCol * TILE_SIZE),
+            (float)(OFFSET_Y + selRow * TILE_SIZE)
+        });
 
-                    highlight.setFillColor(sf::Color(80, 255, 120, 120));
+        highlight.setFillColor(sf::Color(80, 255, 120, 120));
 
-                    window.draw(highlight);
-                }
-            }
+        window.draw(highlight);
+    }
 
-            // draw piece
+    // DRAW PIECES
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+
             const std::string& piece = grid[row][col];
 
             if (!piece.empty() && textures.count(piece)) {
+
                 sf::Sprite sprite(textures[piece]);
 
                 sprite.setPosition({
-                    static_cast<float>(OFFSET_X + col * TILE_SIZE),
-                    static_cast<float>(OFFSET_Y + row * TILE_SIZE)
+                    (float)(OFFSET_X + col * TILE_SIZE),
+                    (float)(OFFSET_Y + row * TILE_SIZE)
                 });
 
                 sf::Vector2u size = textures[piece].getSize();
 
                 sprite.setScale({
-                    static_cast<float>(TILE_SIZE) / size.x,
-                    static_cast<float>(TILE_SIZE) / size.y
+                    (float)TILE_SIZE / size.x,
+                    (float)TILE_SIZE / size.y
                 });
 
                 window.draw(sprite);
             }
         }
     }
+    
+    // UI TEXT (TURN INDICATOR)
+    sf::Text turnText(font);
+
+    turnText.setString(
+        board.isWhiteTurn() ? "White to Move" : "Black to Move"
+    );
+
+    turnText.setCharacterSize(28);
+    turnText.setFillColor(sf::Color(180, 220, 255));
+
+    // center above board
+    float textWidth = turnText.getLocalBounds().size.x;
+    turnText.setPosition({
+        OFFSET_X + (TILE_SIZE * 8) / 2.f - textWidth / 2.f,
+        OFFSET_Y - 45.f
+    });
+
+    window.draw(turnText);
 }

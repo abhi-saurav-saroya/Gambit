@@ -10,6 +10,7 @@ public:
     Renderer();
 
     void loadTextures();
+    void loadFonts();
 
     void render(
         sf::RenderWindow& window,
@@ -21,4 +22,5 @@ public:
 
 private:
     std::map<std::string, sf::Texture> textures;
+    sf::Font font;
 };
