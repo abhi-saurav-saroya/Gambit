@@ -3,6 +3,7 @@
 #include "pieces/knight.hpp"
 #include "pieces/rook.hpp"
 #include "pieces/bishop.hpp"
+#include "pieces/queen.hpp"
 
 Board::Board() {
     selectedRow = -1;
@@ -64,6 +65,10 @@ std::vector<std::pair<int, int>> Board::getLegalMoves(int row, int col) const {
 
     if (piece == "WhiteBishop" || piece == "BlackBishop") {
         return Bishop::getLegalMoves(grid, row, col);
+    }
+
+    if (piece == "WhiteQueen" || piece == "BlackQueen") {
+        return Queen::getLegalMoves(grid, row, col);
     }
 
     return {};
