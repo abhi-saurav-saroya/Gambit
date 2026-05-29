@@ -3,15 +3,18 @@
 #include "rendering/Renderer.hpp"
 #include "input/InputHandler.hpp"
 #include <iostream>
+#include <string>
 
 int main() {
-    const int WINDOW_WIDTH = 1200;
+    // WINDOW SETTINGS
+
+    const int WINDOW_WIDTH  = 1200;
     const int WINDOW_HEIGHT = 900;
 
     const int BOARD_SIZE = 800;
-    const int TILE_SIZE = BOARD_SIZE / 8;
+    const int TILE_SIZE  = BOARD_SIZE / 8;
 
-    const int OFFSET_X = (WINDOW_WIDTH - BOARD_SIZE) / 2;
+    const int OFFSET_X = (WINDOW_WIDTH  - BOARD_SIZE) / 2;
     const int OFFSET_Y = (WINDOW_HEIGHT - BOARD_SIZE) / 2;
 
     sf::RenderWindow window(
@@ -19,21 +22,29 @@ int main() {
         "Gambit - Chess Engine"
     );
 
+    // GAME OBJECTS
     Board board;
     Renderer renderer;
 
     renderer.loadTextures();
     renderer.loadFonts();
 
-    while (window.isOpen()) {
-        while (auto event = window.pollEvent()) {
-            if (event->is<sf::Event::Closed>())
-                window.close();
 
+    // MAIN GAME LOOP
+    while (window.isOpen()) {
+        // EVENTS
+        while (auto event = window.pollEvent()) {
+            // Close window
+            if (event->is<sf::Event::Closed>()) {
+                window.close();
+            }
+
+            // MOUSE CLICK
             if (const auto* mouse = event->getIf<sf::Event::MouseButtonPressed>()) {
                 if (mouse->button == sf::Mouse::Button::Left) {
                     int row, col;
 
+                    // click inside board?
                     if (InputHandler::getBoardSquare(
                         window,
                         OFFSET_X,
@@ -42,18 +53,69 @@ int main() {
                         row,
                         col))
                     {
-                        // SELECTION LOGIC
-                        if (board.hasSelection()) {
-                            auto [selectedRow, selectedCol] = board.getSelection();
-                            if (board.isLegalMove(selectedRow, selectedCol, row, col)) {
-                                board.movePiece(selectedRow, selectedCol, row, col);
+                        // NO PIECE CURRENTLY SELECTED
+                        if (!board.hasSelection()) {
+
+                            std::string piece = board.getGrid()[row][col];
+
+                            // non-empty square
+                            if (!piece.empty()) {
+                                bool isWhitePiece = (piece[0] == 'W');
+
+                                // White's turn
+                                if (board.isWhiteTurn() && isWhitePiece) {
+                                    board.selectSquare(row, col);
+                                    auto moves = board.getLegalMoves(row, col);
+                                    board.setLegalMoves(moves);
+                                }
+
+                                // Black's turn
+                                else if (!board.isWhiteTurn() && !isWhitePiece) {
+                                    board.selectSquare(row, col);
+                                    auto moves = board.getLegalMoves(row, col);
+                                    board.setLegalMoves(moves);
+                                }
+                            }
+                        }
+
+                        // PIECE ALREADY SELECTED
+                        else {
+                            auto [selRow, selCol] = board.getSelection();
+
+                            // legal move?
+                            if (board.isLegalMove(selRow, selCol, row, col)) {
+                                board.movePiece(selRow, selCol, row, col);
+                                board.clearSelection();
+                                board.clearLegalMoves();
                                 board.switchTurn();
                             }
-                            board.clearSelection();
-                        } else {
-                            if (!board.getGrid()[row][col].empty()) {
-                                if (board.isCurrentPlayersPiece(row, col)) {
-                                    board.selectSquare(row, col);
+
+                            // CLICKED ANOTHER SQUARE
+                            else {
+                                board.clearSelection();
+                                board.clearLegalMoves();
+
+                                std::string piece = board.getGrid()[row][col];
+
+                                if (!piece.empty()) {
+                                    bool isWhitePiece = (piece[0] == 'W');
+                                    // White's turn
+                                    if (board.isWhiteTurn() && isWhitePiece) {
+                                        board.selectSquare(row, col);
+
+                                        auto moves = board.getLegalMoves(row, col);
+
+                                        board.setLegalMoves(moves);
+                                    }
+
+                                    // Black's turn
+                                    else if (!board.isWhiteTurn() && !isWhitePiece){
+                                        board.selectSquare(row, col);
+
+                                        auto moves = board.getLegalMoves(row, col);
+
+                                        board.setLegalMoves(moves);
+                                    }
                                 }
                             }
                         }
@@ -62,9 +124,16 @@ int main() {
             }
         }
 
+        // RENDERING
         window.clear();
+        renderer.render(
+            window,
+            board,
+            OFFSET_X,
+            OFFSET_Y,
+            TILE_SIZE
+        );
 
-        renderer.render(window, board, OFFSET_X, OFFSET_Y, TILE_SIZE);
         window.display();
     }
 

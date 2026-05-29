@@ -74,6 +74,25 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         window.draw(highlight);
     }
 
+    // HIGHLIGHT LEGAL MOVES
+    for (const auto& move : board.getLegalMovesList()) {
+        int moveRow = move.first;
+        int moveCol = move.second;
+
+        sf::CircleShape circle(TILE_SIZE / 6.f);
+
+        circle.setFillColor(
+            sf::Color(50, 50, 50, 180)
+        );
+
+        circle.setPosition({
+            OFFSET_X + moveCol * TILE_SIZE + TILE_SIZE / 3.f,
+            OFFSET_Y + moveRow * TILE_SIZE + TILE_SIZE / 3.f
+        });
+
+        window.draw(circle);
+    }
+
     // DRAW PIECES
     for (int row = 0; row < 8; row++) {
         for (int col = 0; col < 8; col++) {

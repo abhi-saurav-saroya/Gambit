@@ -114,3 +114,15 @@ bool Board::isCurrentPlayersPiece(int row, int col) const {
     // Black turn
     return piece[0] == 'B';
 }
+
+void Board::setLegalMoves(const std::vector<std::pair<int,int>>& moves) {
+    legalMoves = moves;
+}
+
+const std::vector<std::pair<int,int>>& Board::getLegalMovesList() const {
+    return legalMoves;
+}
+
+void Board::clearLegalMoves() {
+    legalMoves.clear();
+}
