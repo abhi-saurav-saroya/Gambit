@@ -80,18 +80,6 @@ std::vector<std::pair<int, int>> Board::getLegalMoves(int row, int col) const {
     return {};
 }
 
-bool Board::isLegalMove(int fromRow, int fromCol, int toRow, int toCol) const {
-    auto legalMoves = getLegalMoves(fromRow, fromCol);
-
-    for (const auto& move : legalMoves) {
-        if (move.first == toRow && move.second == toCol) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool Board::isWhiteTurn() const {
     return whiteTurn;
 }
@@ -125,4 +113,131 @@ const std::vector<std::pair<int,int>>& Board::getLegalMovesList() const {
 
 void Board::clearLegalMoves() {
     legalMoves.clear();
+}
+
+bool Board::isSquareUnderAttack(int row, int col, bool byWhite) const {
+    // loop entire board
+    for (int r = 0; r < 8; r++) {
+
+        for (int c = 0; c < 8; c++) {
+
+            std::string piece = grid[r][c];
+
+            // empty square
+            if (piece.empty()) {
+                continue;
+            }
+
+            bool isWhitePiece =
+                (piece[0] == 'W');
+
+            // wrong color
+            if (isWhitePiece != byWhite) {
+                continue;
+            }
+
+            // get legal moves
+            auto moves =
+                getLegalMoves(r, c);
+
+            // does any move attack target square?
+            for (const auto& move : moves) {
+                if (move.first == row &&
+                    move.second == col)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+std::pair<int,int> Board::findKing(bool white) const {
+
+    std::string targetKing;
+
+    if (white) {
+        targetKing = "WhiteKing";
+    }
+    else {
+        targetKing = "BlackKing";
+    }
+
+    // scan board
+    for (int row = 0; row < 8; row++) {
+
+        for (int col = 0; col < 8; col++) {
+
+            if (grid[row][col] == targetKing) {
+                return {row, col};
+            }
+        }
+    }
+
+    // should never happen
+    return {-1, -1};
+}
+
+bool Board::isKingInCheck(bool white) const {
+    // locate king
+    auto [kingRow, kingCol] = findKing(white);
+
+    if (kingRow == -1 || kingCol == -1) {
+        return false; // safety fallback
+    }
+
+    // check if enemy attacks that square
+    bool enemyColor = !white;
+
+    return isSquareUnderAttack(
+        kingRow,
+        kingCol,
+        enemyColor
+    );
+}
+
+MoveBackup Board::makeMove(int fr, int fc, int tr, int tc) {
+    MoveBackup backup;
+    backup.captured = grid[tr][tc];
+
+    grid[tr][tc] = grid[fr][fc];
+    grid[fr][fc] = "";
+
+    return backup;
+}
+
+void Board::undoMove(int fr, int fc, int tr, int tc, const MoveBackup& backup) {
+    grid[fr][fc] = grid[tr][tc];
+    grid[tr][tc] = backup.captured;
+}
+
+bool Board::isLegalMove(int fr, int fc, int tr, int tc) {
+    std::string piece = grid[fr][fc];
+
+    if (piece.empty()) return false;
+
+    // 1. basic rule check
+    auto moves = getLegalMoves(fr, fc);
+
+    bool found = false;
+    for (auto &m : moves)
+        if (m.first == tr && m.second == tc)
+            found = true;
+
+    if (!found) return false;
+
+    // 2. simulate move
+    MoveBackup backup = makeMove(fr, fc, tr, tc);
+
+    bool isWhite = (piece[0] == 'W');
+
+    bool inCheck = isKingInCheck(isWhite);
+
+    // 3. undo move
+    undoMove(fr, fc, tr, tc, backup);
+
+    // 4. result
+    return !inCheck;
 }

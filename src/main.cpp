@@ -65,15 +65,27 @@ int main() {
                                 // White's turn
                                 if (board.isWhiteTurn() && isWhitePiece) {
                                     board.selectSquare(row, col);
-                                    auto moves = board.getLegalMoves(row, col);
-                                    board.setLegalMoves(moves);
+                                    auto pseudoMoves = board.getLegalMoves(row, col);
+                                    std::vector<std::pair<int,int>> legalMoves;
+                                    for (auto [r, c] : pseudoMoves) {
+                                        if (board.isLegalMove(row, col, r, c)) {
+                                            legalMoves.push_back({r, c});
+                                        }
+                                    }
+                                    board.setLegalMoves(legalMoves);
                                 }
 
                                 // Black's turn
                                 else if (!board.isWhiteTurn() && !isWhitePiece) {
                                     board.selectSquare(row, col);
-                                    auto moves = board.getLegalMoves(row, col);
-                                    board.setLegalMoves(moves);
+                                    auto pseudoMoves = board.getLegalMoves(row, col);
+                                    std::vector<std::pair<int,int>> legalMoves;
+                                    for (auto [r, c] : pseudoMoves) {
+                                        if (board.isLegalMove(row, col, r, c)) {
+                                            legalMoves.push_back({r, c});
+                                        }
+                                    }
+                                    board.setLegalMoves(legalMoves);
                                 }
                             }
                         }
@@ -102,19 +114,27 @@ int main() {
                                     // White's turn
                                     if (board.isWhiteTurn() && isWhitePiece) {
                                         board.selectSquare(row, col);
-
-                                        auto moves = board.getLegalMoves(row, col);
-
-                                        board.setLegalMoves(moves);
+                                        auto pseudoMoves = board.getLegalMoves(row, col);
+                                        std::vector<std::pair<int,int>> legalMoves;
+                                        for (auto [r, c] : pseudoMoves) {
+                                            if (board.isLegalMove(row, col, r, c)) {
+                                                legalMoves.push_back({r, c});
+                                            }
+                                        }
+                                        board.setLegalMoves(legalMoves);
                                     }
 
                                     // Black's turn
                                     else if (!board.isWhiteTurn() && !isWhitePiece){
                                         board.selectSquare(row, col);
-
-                                        auto moves = board.getLegalMoves(row, col);
-
-                                        board.setLegalMoves(moves);
+                                        auto pseudoMoves = board.getLegalMoves(row, col);
+                                        std::vector<std::pair<int,int>> legalMoves;
+                                        for (auto [r, c] : pseudoMoves) {
+                                            if (board.isLegalMove(row, col, r, c)) {
+                                                legalMoves.push_back({r, c});
+                                            }
+                                        }
+                                        board.setLegalMoves(legalMoves);
                                     }
                                 }
                             }

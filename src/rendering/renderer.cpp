@@ -119,6 +119,22 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
             }
         }
     }
+
+    if (board.isKingInCheck(board.isWhiteTurn())) {
+        auto [kr, kc] = board.findKing(board.isWhiteTurn());
+
+        sf::RectangleShape checkHighlight(
+            sf::Vector2f((float)TILE_SIZE, (float)TILE_SIZE)
+        );
+
+        checkHighlight.setPosition({
+            static_cast<float>(OFFSET_X + kc * TILE_SIZE),
+            static_cast<float>(OFFSET_Y + kr * TILE_SIZE)
+        });
+        checkHighlight.setFillColor(sf::Color(255, 50, 50, 140));
+
+        window.draw(checkHighlight);
+    }
     
     // UI TEXT (TURN INDICATOR)
     sf::Text turnText(font);

@@ -2,6 +2,10 @@
 #include <vector>
 #include <string>
 
+struct MoveBackup {
+    std::string captured;
+};
+
 class Board {
     public:
         Board();
@@ -17,7 +21,6 @@ class Board {
         void movePiece(int fromRow, int fromCol, int toRow, int toCol);
 
         std::vector<std::pair<int, int>> getLegalMoves(int row, int col) const;
-        bool isLegalMove(int fromRow, int fromCol, int toRow, int toCol) const;
         void setLegalMoves(const std::vector<std::pair<int,int>>& moves);
         const std::vector<std::pair<int,int>>& getLegalMovesList() const;
         void clearLegalMoves();
@@ -25,6 +28,14 @@ class Board {
         bool isWhiteTurn() const;
         void switchTurn();
         bool isCurrentPlayersPiece(int row, int col) const;
+
+        bool isSquareUnderAttack(int row, int col, bool byWhite) const;
+        std::pair<int,int> findKing(bool white) const;
+        bool isKingInCheck(bool white) const;
+
+        MoveBackup makeMove(int fr, int fc, int tr, int tc);
+        void undoMove(int fr, int fc, int tr, int tc, const MoveBackup& backup);
+        bool isLegalMove(int fr, int fc, int tr, int tc);
     
     private:
         std::vector<std::vector<std::string>> grid;
