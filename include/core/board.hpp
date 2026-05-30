@@ -38,6 +38,11 @@ class Board {
         bool isLegalMove(int fr, int fc, int tr, int tc);
 
         bool isCheckmate(bool white);
+
+        bool isGameOver() const;
+        void setGameOver(const std::string& winnerName);
+        std::string getWinner() const;
+        void resetGame();
     
     private:
         std::vector<std::vector<std::string>> grid;
@@ -46,4 +51,6 @@ class Board {
         int selectedRow;
         int selectedCol;
         bool whiteTurn;
+        bool gameOver;
+        std::string winner;
 };

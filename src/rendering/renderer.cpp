@@ -154,4 +154,127 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
     });
 
     window.draw(turnText);
+
+
+    // =====================================================
+    // GAME OVER OVERLAY
+    // =====================================================
+
+    if (board.isGameOver()) {
+
+        // Dark transparent background
+        sf::RectangleShape overlay(
+            sf::Vector2f(
+                static_cast<float>(window.getSize().x),
+                static_cast<float>(window.getSize().y)
+            )
+        );
+
+        overlay.setFillColor(
+            sf::Color(0, 0, 0, 180)
+        );
+
+        window.draw(overlay);
+
+        // CHECKMATE title
+        sf::Text title(font);
+
+        title.setString("CHECKMATE");
+
+        title.setCharacterSize(56);
+
+        title.setFillColor(sf::Color::White);
+
+        float titleWidth =
+            title.getLocalBounds().size.x;
+
+        title.setPosition({
+            window.getSize().x / 2.f - titleWidth / 2.f,
+            220.f
+        });
+
+        window.draw(title);
+
+        // Winner text
+        sf::Text winnerText(font);
+
+        winnerText.setString(
+            board.getWinner() + " Wins!"
+        );
+
+        winnerText.setCharacterSize(34);
+
+        winnerText.setFillColor(
+            sf::Color(220, 220, 220)
+        );
+
+        float winnerWidth =
+            winnerText.getLocalBounds().size.x;
+
+        winnerText.setPosition({
+            window.getSize().x / 2.f - winnerWidth / 2.f,
+            310.f
+        });
+
+        window.draw(winnerText);
+
+        // RESET BUTTON
+        sf::RectangleShape resetButton(
+            sf::Vector2f(220.f, 60.f)
+        );
+
+        resetButton.setPosition({
+            window.getSize().x / 2.f - 110.f,
+            430.f
+        });
+
+        resetButton.setFillColor(
+            sf::Color(70, 180, 70)
+        );
+
+        window.draw(resetButton);
+
+        sf::Text resetText(font);
+        resetText.setString("Play Again");
+        resetText.setCharacterSize(24);
+        resetText.setFillColor(sf::Color::White);
+        float resetWidth = resetText.getLocalBounds().size.x;
+
+        resetText.setPosition({
+            window.getSize().x / 2.f - resetWidth / 2.f,
+            445.f
+        });
+
+        window.draw(resetText);
+
+        // EXIT BUTTON
+        sf::RectangleShape exitButton(
+            sf::Vector2f(220.f, 60.f)
+        );
+
+        exitButton.setPosition({
+            window.getSize().x / 2.f - 110.f,
+            510.f
+        });
+
+        exitButton.setFillColor(
+            sf::Color(180, 70, 70)
+        );
+
+        window.draw(exitButton);
+
+        sf::Text exitText(font);
+        exitText.setString("Exit");
+        exitText.setCharacterSize(24);
+        exitText.setFillColor(sf::Color::White);
+        float exitWidth = exitText.getLocalBounds().size.x;
+
+        exitText.setPosition({
+            window.getSize().x / 2.f - exitWidth / 2.f,
+            525.f
+        });
+
+        window.draw(exitText);
+    } 
+
 }

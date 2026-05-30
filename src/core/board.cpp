@@ -10,6 +10,8 @@ Board::Board() {
     selectedRow = -1;
     selectedCol = -1;
     whiteTurn = true;
+    gameOver = false;
+    winner = "";
 
     grid = {
         {"BlackRook","BlackKnight","BlackBishop","BlackQueen","BlackKing","BlackBishop","BlackKnight","BlackRook"},
@@ -274,4 +276,21 @@ bool Board::isCheckmate(bool white) {
     }
 
     return true;
+}
+
+bool Board::isGameOver() const {
+    return gameOver;
+}
+
+void Board::setGameOver(const std::string& winnerName) {
+    gameOver = true;
+    winner = winnerName;
+}
+
+std::string Board::getWinner() const {
+    return winner;
+}
+
+void Board::resetGame() {
+    *this = Board();
 }

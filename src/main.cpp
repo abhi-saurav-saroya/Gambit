@@ -101,7 +101,7 @@ int main() {
                                 board.clearLegalMoves();
                                 board.switchTurn();
                                 if (board.isCheckmate(board.isWhiteTurn())) {
-                                    std::cout << "CHECKMATE!\n";
+                                    board.setGameOver(board.isWhiteTurn() ? "Black" : "White");
                                 }
                             }
 
