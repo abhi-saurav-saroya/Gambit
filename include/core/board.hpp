@@ -17,6 +17,7 @@ class Board {
     
         bool hasSelection() const;
         std::pair<int,int> getSelection() const;
+        void selectPiece(int row, int col);
 
         void movePiece(int fromRow, int fromCol, int toRow, int toCol);
 

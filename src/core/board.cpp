@@ -294,3 +294,17 @@ std::string Board::getWinner() const {
 void Board::resetGame() {
     *this = Board();
 }
+
+void Board::selectPiece(int row, int col) {
+    selectSquare(row, col);
+    auto pseudoMoves = getLegalMoves(row, col);
+    std::vector<std::pair<int, int>> legalMoves;
+    
+    for (auto [r, c] : pseudoMoves) {
+        if (isLegalMove(row, col, r, c)) {
+            legalMoves.push_back({r, c});
+        }
+    }
+
+    setLegalMoves(legalMoves);
+}

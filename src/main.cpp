@@ -29,22 +29,55 @@ int main() {
     renderer.loadTextures();
     renderer.loadFonts();
 
-
     // MAIN GAME LOOP
     while (window.isOpen()) {
+
         // EVENTS
         while (auto event = window.pollEvent()) {
-            // Close window
+
+            // CLOSE WINDOW
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
 
             // MOUSE CLICK
             if (const auto* mouse = event->getIf<sf::Event::MouseButtonPressed>()) {
+
                 if (mouse->button == sf::Mouse::Button::Left) {
+
+                    int mouseX = mouse->position.x;
+                    int mouseY = mouse->position.y;
+
+                    // GAME OVER BUTTONS
+                    if (board.isGameOver()) {
+                        int centerX = WINDOW_WIDTH / 2;
+
+                        // PLAY AGAIN BUTTON
+                        if (mouseX >= centerX - 110 &&
+                            mouseX <= centerX + 110 &&
+                            mouseY >= 430 &&
+                            mouseY <= 490) 
+                        {
+                            board.resetGame();
+                            continue;
+                        }
+
+                        // EXIT BUTTON
+                        if (mouseX >= centerX - 110 &&
+                            mouseX <= centerX + 110 &&
+                            mouseY >= 510 &&
+                            mouseY <= 570)
+                        {
+                            window.close();
+                            continue;
+                        }
+
+                        continue;
+                    }
+
                     int row, col;
 
-                    // click inside board?
+                    // CLICK INSIDE BOARD?
                     if (InputHandler::getBoardSquare(
                         window,
                         OFFSET_X,
@@ -53,39 +86,21 @@ int main() {
                         row,
                         col))
                     {
-                        // NO PIECE CURRENTLY SELECTED
+                        // NO PIECE SELECTED
                         if (!board.hasSelection()) {
-
                             std::string piece = board.getGrid()[row][col];
 
-                            // non-empty square
                             if (!piece.empty()) {
                                 bool isWhitePiece = (piece[0] == 'W');
 
-                                // White's turn
+                                // WHITE TURN
                                 if (board.isWhiteTurn() && isWhitePiece) {
-                                    board.selectSquare(row, col);
-                                    auto pseudoMoves = board.getLegalMoves(row, col);
-                                    std::vector<std::pair<int,int>> legalMoves;
-                                    for (auto [r, c] : pseudoMoves) {
-                                        if (board.isLegalMove(row, col, r, c)) {
-                                            legalMoves.push_back({r, c});
-                                        }
-                                    }
-                                    board.setLegalMoves(legalMoves);
+                                    board.selectPiece(row, col);
                                 }
 
-                                // Black's turn
+                                // BLACK TURN
                                 else if (!board.isWhiteTurn() && !isWhitePiece) {
-                                    board.selectSquare(row, col);
-                                    auto pseudoMoves = board.getLegalMoves(row, col);
-                                    std::vector<std::pair<int,int>> legalMoves;
-                                    for (auto [r, c] : pseudoMoves) {
-                                        if (board.isLegalMove(row, col, r, c)) {
-                                            legalMoves.push_back({r, c});
-                                        }
-                                    }
-                                    board.setLegalMoves(legalMoves);
+                                    board.selectPiece(row, col);
                                 }
                             }
                         }
@@ -94,18 +109,20 @@ int main() {
                         else {
                             auto [selRow, selCol] = board.getSelection();
 
-                            // legal move?
+                            // LEGAL MOVE
                             if (board.isLegalMove(selRow, selCol, row, col)) {
                                 board.movePiece(selRow, selCol, row, col);
+
                                 board.clearSelection();
                                 board.clearLegalMoves();
                                 board.switchTurn();
+
                                 if (board.isCheckmate(board.isWhiteTurn())) {
                                     board.setGameOver(board.isWhiteTurn() ? "Black" : "White");
                                 }
                             }
 
-                            // CLICKED ANOTHER SQUARE
+                            // SELECT DIFFERENT PIECE
                             else {
                                 board.clearSelection();
                                 board.clearLegalMoves();
@@ -113,31 +130,17 @@ int main() {
                                 std::string piece = board.getGrid()[row][col];
 
                                 if (!piece.empty()) {
-                                    bool isWhitePiece = (piece[0] == 'W');
-                                    // White's turn
+                                    bool isWhitePiece =
+                                        (piece[0] == 'W');
+
+                                    // WHITE TURN
                                     if (board.isWhiteTurn() && isWhitePiece) {
-                                        board.selectSquare(row, col);
-                                        auto pseudoMoves = board.getLegalMoves(row, col);
-                                        std::vector<std::pair<int,int>> legalMoves;
-                                        for (auto [r, c] : pseudoMoves) {
-                                            if (board.isLegalMove(row, col, r, c)) {
-                                                legalMoves.push_back({r, c});
-                                            }
-                                        }
-                                        board.setLegalMoves(legalMoves);
+                                        board.selectPiece(row, col);
                                     }
 
-                                    // Black's turn
-                                    else if (!board.isWhiteTurn() && !isWhitePiece){
-                                        board.selectSquare(row, col);
-                                        auto pseudoMoves = board.getLegalMoves(row, col);
-                                        std::vector<std::pair<int,int>> legalMoves;
-                                        for (auto [r, c] : pseudoMoves) {
-                                            if (board.isLegalMove(row, col, r, c)) {
-                                                legalMoves.push_back({r, c});
-                                            }
-                                        }
-                                        board.setLegalMoves(legalMoves);
+                                    // BLACK TURN
+                                    else if (!board.isWhiteTurn() && !isWhitePiece) {
+                                        board.selectPiece(row, col);
                                     }
                                 }
                             }
@@ -149,6 +152,7 @@ int main() {
 
         // RENDERING
         window.clear();
+
         renderer.render(
             window,
             board,
