@@ -88,60 +88,33 @@ int main() {
                     {
                         // NO PIECE SELECTED
                         if (!board.hasSelection()) {
-                            std::string piece = board.getGrid()[row][col];
-
-                            if (!piece.empty()) {
-                                bool isWhitePiece = (piece[0] == 'W');
-
-                                // WHITE TURN
-                                if (board.isWhiteTurn() && isWhitePiece) {
-                                    board.selectPiece(row, col);
-                                }
-
-                                // BLACK TURN
-                                else if (!board.isWhiteTurn() && !isWhitePiece) {
-                                    board.selectPiece(row, col);
-                                }
+                            if (board.canSelectPiece(row, col)) {
+                                board.selectPiece(row, col);
                             }
                         }
 
                         // PIECE ALREADY SELECTED
                         else {
                             auto [selRow, selCol] = board.getSelection();
-
-                            // LEGAL MOVE
+                            // legal move
                             if (board.isLegalMove(selRow, selCol, row, col)) {
                                 board.movePiece(selRow, selCol, row, col);
-
                                 board.clearSelection();
                                 board.clearLegalMoves();
                                 board.switchTurn();
-
+                            
                                 if (board.isCheckmate(board.isWhiteTurn())) {
                                     board.setGameOver(board.isWhiteTurn() ? "Black" : "White");
                                 }
                             }
-
-                            // SELECT DIFFERENT PIECE
+                        
+                            // clicked somewhere else
                             else {
                                 board.clearSelection();
                                 board.clearLegalMoves();
-
-                                std::string piece = board.getGrid()[row][col];
-
-                                if (!piece.empty()) {
-                                    bool isWhitePiece =
-                                        (piece[0] == 'W');
-
-                                    // WHITE TURN
-                                    if (board.isWhiteTurn() && isWhitePiece) {
-                                        board.selectPiece(row, col);
-                                    }
-
-                                    // BLACK TURN
-                                    else if (!board.isWhiteTurn() && !isWhitePiece) {
-                                        board.selectPiece(row, col);
-                                    }
+                            
+                                if (board.canSelectPiece(row, col)) {
+                                    board.selectPiece(row, col);
                                 }
                             }
                         }

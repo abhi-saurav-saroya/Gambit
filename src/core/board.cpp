@@ -299,7 +299,7 @@ void Board::selectPiece(int row, int col) {
     selectSquare(row, col);
     auto pseudoMoves = getLegalMoves(row, col);
     std::vector<std::pair<int, int>> legalMoves;
-    
+
     for (auto [r, c] : pseudoMoves) {
         if (isLegalMove(row, col, r, c)) {
             legalMoves.push_back({r, c});
@@ -307,4 +307,17 @@ void Board::selectPiece(int row, int col) {
     }
 
     setLegalMoves(legalMoves);
+}
+
+bool Board::canSelectPiece(int row, int col) const {
+    std::string piece = grid[row][col];
+
+    // empty square
+    if (piece.empty()) {
+        return false;
+    }
+
+    bool isWhitePiece = (piece[0] == 'W');
+
+    return whiteTurn == isWhitePiece;
 }
