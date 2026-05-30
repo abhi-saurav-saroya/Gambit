@@ -241,3 +241,37 @@ bool Board::isLegalMove(int fr, int fc, int tr, int tc) {
     // 4. result
     return !inCheck;
 }
+
+bool Board::isCheckmate(bool white) {
+    // King must be in check first
+    if (!isKingInCheck(white)) {
+        return false;
+    }
+
+    // Search every piece of this color
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            std::string piece = grid[row][col];
+
+            if (piece.empty()) {
+                continue;
+            }
+
+            bool isWhitePiece = (piece[0] == 'W');
+
+            if (isWhitePiece != white) {
+                continue;
+            }
+
+            auto moves = getLegalMoves(row, col);
+
+            for (auto [toRow, toCol] : moves) {
+                if (isLegalMove(row, col, toRow, toCol)) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}

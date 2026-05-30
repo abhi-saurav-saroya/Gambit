@@ -100,6 +100,9 @@ int main() {
                                 board.clearSelection();
                                 board.clearLegalMoves();
                                 board.switchTurn();
+                                if (board.isCheckmate(board.isWhiteTurn())) {
+                                    std::cout << "CHECKMATE!\n";
+                                }
                             }
 
                             // CLICKED ANOTHER SQUARE

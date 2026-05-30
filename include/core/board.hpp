@@ -36,6 +36,8 @@ class Board {
         MoveBackup makeMove(int fr, int fc, int tr, int tc);
         void undoMove(int fr, int fc, int tr, int tc, const MoveBackup& backup);
         bool isLegalMove(int fr, int fc, int tr, int tc);
+
+        bool isCheckmate(bool white);
     
     private:
         std::vector<std::vector<std::string>> grid;
