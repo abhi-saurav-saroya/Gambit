@@ -120,6 +120,134 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         }
     }
 
+    // PROMOTION OVERLAY
+    if (board.isPromotionPending()) {
+        sf::RectangleShape overlay(
+            sf::Vector2f(
+                (float)window.getSize().x,
+                (float)window.getSize().y
+            )
+        );
+
+        overlay.setFillColor(
+            sf::Color(0, 0, 0, 180)
+        );
+        window.draw(overlay);
+
+        sf::RectangleShape panel(
+            sf::Vector2f(360.f, 420.f)
+        );
+
+        panel.setFillColor(
+            sf::Color(40, 40, 40)
+        );
+        panel.setPosition({
+            window.getSize().x / 2.f - 180.f,
+            180.f
+        });
+
+        window.draw(panel);
+
+        sf::Text title(font);
+        title.setString("Choose Promotion");
+        title.setCharacterSize(32);
+        float titleWidth = title.getLocalBounds().size.x;
+        title.setPosition({
+            window.getSize().x / 2.f - titleWidth / 2.f,
+            205.f
+        });
+        window.draw(title);
+
+        // queen promotion button
+        sf::RectangleShape queenButton(
+            sf::Vector2f(220.f, 50.f)
+        );
+        queenButton.setPosition({
+            window.getSize().x / 2.f - 110.f,
+            270.f
+        });
+        queenButton.setFillColor(
+            sf::Color(90, 90, 90)
+        );
+        window.draw(queenButton);
+        sf::Text queenText(font);
+        queenText.setString("Queen");
+        queenText.setCharacterSize(24);
+        float queenWidth = queenText.getLocalBounds().size.x;
+        queenText.setPosition({
+            window.getSize().x / 2.f - queenWidth / 2.f,
+            280.f
+        });
+        window.draw(queenText);
+
+        // rook promotion buttton
+        sf::RectangleShape rookButton(
+            sf::Vector2f(220.f, 50.f)
+        );
+        rookButton.setPosition({
+            window.getSize().x / 2.f - 110.f,
+            340.f
+        });
+        rookButton.setFillColor(
+            sf::Color(90, 90, 90)
+        );
+        window.draw(rookButton);
+        sf::Text rookText(font);
+        rookText.setString("Rook");
+        rookText.setCharacterSize(24);
+        float rookWidth = rookText.getLocalBounds().size.x;
+        rookText.setPosition({
+            window.getSize().x / 2.f - rookWidth / 2.f,
+            350.f
+        });
+        window.draw(rookText);
+
+        // bishop promotion button
+        sf::RectangleShape bishopButton(
+            sf::Vector2f(220.f, 50.f)
+        );
+        bishopButton.setPosition({
+            window.getSize().x / 2.f - 110.f,
+            410.f
+        });
+        bishopButton.setFillColor(
+            sf::Color(90, 90, 90)
+        );
+        window.draw(bishopButton);
+        sf::Text bishopText(font);
+        bishopText.setString("Bishop");
+        bishopText.setCharacterSize(24);
+        float bishopWidth = bishopText.getLocalBounds().size.x;
+        bishopText.setPosition({
+            window.getSize().x / 2.f - bishopWidth / 2.f,
+            420.f
+        });
+        window.draw(bishopText);
+
+        // knight promotion button
+        sf::RectangleShape knightButton(
+            sf::Vector2f(220.f, 50.f)
+        );
+        knightButton.setPosition({
+            window.getSize().x / 2.f - 110.f,
+            480.f
+        });
+        knightButton.setFillColor(
+            sf::Color(90, 90, 90)
+        );
+        window.draw(knightButton);
+        sf::Text knightText(font);
+        knightText.setString("Knight");
+        knightText.setCharacterSize(24);
+        float knightWidth = knightText.getLocalBounds().size.x;
+        knightText.setPosition({
+            window.getSize().x / 2.f - knightWidth / 2.f,
+            490.f
+        });
+        window.draw(knightText);
+    }
+
+    // CHECK OVERLAY
     if (board.isKingInCheck(board.isWhiteTurn())) {
         auto [kr, kc] = board.findKing(board.isWhiteTurn());
 
@@ -156,10 +284,7 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
     window.draw(turnText);
 
 
-    // =====================================================
     // GAME OVER OVERLAY
-    // =====================================================
-
     if (board.isGameOver()) {
 
         // Dark transparent background

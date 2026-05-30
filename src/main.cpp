@@ -43,6 +43,38 @@ int main() {
             // MOUSE CLICK
             if (const auto* mouse = event->getIf<sf::Event::MouseButtonPressed>()) {
 
+                if (board.isPromotionPending()) {
+                    int mouseX = mouse->position.x;
+                    int mouseY = mouse->position.y;
+
+                    int centerX = WINDOW_WIDTH / 2;
+                    bool whitePromotion = board.isPromotionWhite();
+
+                    std::string prefix = whitePromotion ? "White" : "Black";
+
+                    if (mouseX >= centerX - 110 && mouseX <= centerX + 110 && mouseY >= 270 && mouseY <= 320) {
+                        board.promoteTo(prefix + "Queen");
+                        continue;
+                    }
+
+                    if (mouseX >= centerX - 110 && mouseX <= centerX + 110 && mouseY >= 340 && mouseY <= 390) {
+                        board.promoteTo(prefix + "Rook");
+                        continue;
+                    }
+
+                    if (mouseX >= centerX - 110 && mouseX <= centerX + 110 && mouseY >= 480 && mouseY <= 530) {
+                        board.promoteTo(prefix + "Knight");
+                        continue;
+                    }
+        
+                    if (mouseX >= centerX - 110 && mouseX <= centerX + 110 && mouseY >= 410 && mouseY <= 460) {
+                        board.promoteTo(prefix + "Bishop");
+                        continue;
+                    }
+
+                    continue;
+                }
+
                 if (mouse->button == sf::Mouse::Button::Left) {
 
                     int mouseX = mouse->position.x;
@@ -99,6 +131,7 @@ int main() {
                             // legal move
                             if (board.isLegalMove(selRow, selCol, row, col)) {
                                 board.movePiece(selRow, selCol, row, col);
+                                board.checkPromotion();
                                 board.clearSelection();
                                 board.clearLegalMoves();
                                 board.switchTurn();

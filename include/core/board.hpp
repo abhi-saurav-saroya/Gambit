@@ -46,6 +46,11 @@ class Board {
         void setGameOver(const std::string& winnerName);
         std::string getWinner() const;
         void resetGame();
+
+        bool isPromotionPending() const;
+        bool isPromotionWhite() const;
+        void checkPromotion();
+        void promoteTo(const std::string& pieceName);
     
     private:
         std::vector<std::vector<std::string>> grid;
@@ -56,4 +61,9 @@ class Board {
         bool whiteTurn;
         bool gameOver;
         std::string winner;
+
+        bool promotionPending;
+        int promotionRow;
+        int promotionCol;
+        bool promotionIsWhite;
 };

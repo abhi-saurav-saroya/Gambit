@@ -12,6 +12,10 @@ Board::Board() {
     whiteTurn = true;
     gameOver = false;
     winner = "";
+    promotionPending = false;
+    promotionRow = -1;
+    promotionCol = -1;
+    promotionIsWhite = false;
 
     grid = {
         {"BlackRook","BlackKnight","BlackBishop","BlackQueen","BlackKing","BlackBishop","BlackKnight","BlackRook"},
@@ -320,4 +324,41 @@ bool Board::canSelectPiece(int row, int col) const {
     bool isWhitePiece = (piece[0] == 'W');
 
     return whiteTurn == isWhitePiece;
+}
+
+void Board::checkPromotion() {
+    for (int col = 0; col < 8; col++) {
+
+        if (grid[0][col] == "WhitePawn") {
+            promotionPending = true;
+            promotionRow = 0;
+            promotionCol = col;
+            promotionIsWhite = true;
+            return;
+        }
+
+        if (grid[7][col] == "BlackPawn") {
+            promotionPending = true;
+            promotionRow = 7;
+            promotionCol = col;
+            promotionIsWhite = false;
+            return;
+        }
+    }
+}
+
+bool Board::isPromotionPending() const {
+    return promotionPending;
+}
+
+bool Board::isPromotionWhite() const {
+    return promotionIsWhite;
+}
+
+void Board::promoteTo(const std::string& pieceName) {
+    grid[promotionRow][promotionCol] = pieceName;
+
+    promotionPending = false;
+    promotionRow = -1;
+    promotionCol = -1;
 }
