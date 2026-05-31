@@ -22,6 +22,9 @@ Board::Board() {
     whiteRightRookMoved = false;
     blackLeftRookMoved = false;
     blackRightRookMoved = false;
+    enPassantAvailable = false;
+    enPassantRow = -1;
+    enPassantCol = -1;
 
     grid = {
         {"BlackRook","BlackKnight","BlackBishop","BlackQueen","BlackKing","BlackBishop","BlackKnight","BlackRook"},
@@ -58,10 +61,28 @@ std::pair<int,int> Board::getSelection() const {
 }
 
 void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+    bool oldEnPassantAvailable = enPassantAvailable;
+    int oldEnPassantRow = enPassantRow;
+    int oldEnPassantCol = enPassantCol;
+
+    enPassantAvailable = false;
+    enPassantRow = -1;
+    enPassantCol = -1;
+
     std::string piece = grid[fromRow][fromCol];
 
     grid[toRow][toCol] = piece;
     grid[fromRow][fromCol] = "";
+
+    // WHITE EN PASSANT
+    if (piece == "WhitePawn" && oldEnPassantAvailable && toRow == oldEnPassantRow && toCol == oldEnPassantCol) {
+        grid[toRow + 1][toCol] = "";
+    }
+
+    // BLACK EN PASSANT
+    if (piece == "BlackPawn" && oldEnPassantAvailable && toRow == oldEnPassantRow && toCol == oldEnPassantCol) {
+        grid[toRow - 1][toCol] = "";
+    }
 
     // WHITE KINGSIDE CASTLE
     if (piece == "WhiteKing" && fromRow == 7 && fromCol == 4 && toRow == 7 && toCol == 6) {
@@ -104,6 +125,22 @@ void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
             whiteLeftRookMoved = true;
         if (fromRow == 7 && fromCol == 7)
             whiteRightRookMoved = true;
+    }
+
+    if(piece == "WhitePawn") {
+        if(fromRow == 6 && toRow == 4) {
+            enPassantAvailable = true;
+            enPassantRow = 5;
+            enPassantCol = fromCol;
+        }
+    }
+
+    if(piece == "BlackPawn") {
+        if(fromRow == 1 && toRow == 3) {
+            enPassantAvailable = true;
+            enPassantRow = 2;
+            enPassantCol = fromCol;
+        }
     }
 }
 
@@ -191,7 +228,30 @@ std::vector<std::pair<int, int>> Board::getLegalMoves(int row, int col) const {
     std::string piece = grid[row][col];
 
     if (piece == "WhitePawn" || piece == "BlackPawn") {
-        return Pawn::getLegalMoves(grid, row, col);
+        auto moves = Pawn::getLegalMoves(grid, row, col);
+
+        if (enPassantAvailable) {
+
+            if (piece == "WhitePawn") {
+                if (row == 3 && ::abs(col - enPassantCol) == 1 && enPassantRow == 2) {
+                    moves.push_back({
+                        enPassantRow,
+                        enPassantCol
+                    });
+                }
+            }
+
+            else {
+                if (row == 4 && std::abs(col - enPassantCol) == 1 && enPassantRow == 5) {
+                    moves.push_back({
+                        enPassantRow,
+                        enPassantCol
+                    });
+                }
+            }
+        }
+
+        return moves;
     }
 
     if (piece == "WhiteKnight" || piece == "BlackKnight") {

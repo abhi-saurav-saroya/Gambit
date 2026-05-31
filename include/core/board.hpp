@@ -76,4 +76,8 @@ class Board {
         bool whiteRightRookMoved;
         bool blackLeftRookMoved;
         bool blackRightRookMoved;
+
+        bool enPassantAvailable;
+        int enPassantRow;
+        int enPassantCol;
 };
