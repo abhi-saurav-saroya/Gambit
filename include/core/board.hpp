@@ -51,6 +51,9 @@ class Board {
         bool isPromotionWhite() const;
         void checkPromotion();
         void promoteTo(const std::string& pieceName);
+
+        bool canCastleKingside(bool white) const;
+        bool canCastleQueenside(bool white) const;
     
     private:
         std::vector<std::vector<std::string>> grid;
@@ -66,4 +69,11 @@ class Board {
         int promotionRow;
         int promotionCol;
         bool promotionIsWhite;
+
+        bool whiteKingMoved;
+        bool blackKingMoved;
+        bool whiteLeftRookMoved;
+        bool whiteRightRookMoved;
+        bool blackLeftRookMoved;
+        bool blackRightRookMoved;
 };

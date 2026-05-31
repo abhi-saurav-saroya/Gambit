@@ -16,6 +16,12 @@ Board::Board() {
     promotionRow = -1;
     promotionCol = -1;
     promotionIsWhite = false;
+    whiteKingMoved = false;
+    blackKingMoved = false;
+    whiteLeftRookMoved = false;
+    whiteRightRookMoved = false;
+    blackLeftRookMoved = false;
+    blackRightRookMoved = false;
 
     grid = {
         {"BlackRook","BlackKnight","BlackBishop","BlackQueen","BlackKing","BlackBishop","BlackKnight","BlackRook"},
@@ -52,8 +58,133 @@ std::pair<int,int> Board::getSelection() const {
 }
 
 void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
-    grid[toRow][toCol] = grid[fromRow][fromCol];
+    std::string piece = grid[fromRow][fromCol];
+
+    grid[toRow][toCol] = piece;
     grid[fromRow][fromCol] = "";
+
+    // WHITE KINGSIDE CASTLE
+    if (piece == "WhiteKing" && fromRow == 7 && fromCol == 4 && toRow == 7 && toCol == 6) {
+        grid[7][5] = grid[7][7];
+        grid[7][7] = "";
+    }
+
+    // WHITE QUEENSIDE CASTLE
+    if (piece == "WhiteKing" && fromRow == 7 && fromCol == 4 && toRow == 7 && toCol == 2) {
+        grid[7][3] = grid[7][0];
+        grid[7][0] = "";
+    }
+
+    // BLACK KINGSIDE CASTLE
+    if (piece == "BlackKing" && fromRow == 0 && fromCol == 4 && toRow == 0 && toCol == 6) {
+        grid[0][5] = grid[0][7];
+        grid[0][7] = "";
+    }
+
+    // BLACK QUEENSIDE CASTLE
+    if (piece == "BlackKing" && fromRow == 0 && fromCol == 4 && toRow == 0 && toCol == 2) {
+        grid[0][3] = grid[0][0];
+        grid[0][0] = "";
+    }
+
+    if (piece == "BlackKing")
+        blackKingMoved = true;
+    if(piece == "WhiteKing")
+        whiteKingMoved = true;
+
+    if (piece == "BlackRook") {
+        if (fromRow == 0 && fromCol == 0)
+            blackLeftRookMoved = true;
+        if (fromRow == 0 && fromCol == 7)
+            blackRightRookMoved = true;
+    }
+
+    if (piece == "WhiteRook") {
+        if (fromRow == 7 && fromCol == 0)
+            whiteLeftRookMoved = true;
+        if (fromRow == 7 && fromCol == 7)
+            whiteRightRookMoved = true;
+    }
+}
+
+bool Board::canCastleKingside(bool white) const {
+    if (white) {
+        if (whiteKingMoved)
+            return false;
+        if (whiteRightRookMoved)
+            return false;
+        if (!grid[7][5].empty())
+            return false;
+        if (!grid[7][6].empty())
+            return false;
+        if (isSquareUnderAttack(7, 4, false))
+            return false;
+        if (isSquareUnderAttack(7, 5, false))
+            return false;
+        if (isSquareUnderAttack(7, 6, false))
+            return false;
+        return true;
+    }
+
+    else {
+        if (blackKingMoved)
+            return false;
+        if (blackRightRookMoved)
+            return false;
+        if (!grid[0][5].empty())
+            return false;
+        if (!grid[0][6].empty())
+            return false;
+        if (isSquareUnderAttack(0, 4, true))
+            return false;
+        if (isSquareUnderAttack(0, 5, true))
+            return false;
+        if (isSquareUnderAttack(0, 6, true))
+            return false;
+        return true;
+    }
+}
+
+bool Board::canCastleQueenside(bool white) const {
+    if (white) {
+        if (whiteKingMoved)
+            return false;
+        if (whiteLeftRookMoved)
+            return false;
+        if (!grid[7][1].empty())
+            return false;
+        if (!grid[7][2].empty())
+            return false;
+        if (!grid[7][3].empty())
+            return false;
+        if (isSquareUnderAttack(7, 4, false))
+            return false;
+        if (isSquareUnderAttack(7, 3, false))
+            return false;
+        if (isSquareUnderAttack(7, 2, false))
+            return false;
+        return true;
+    }
+
+    else {
+        if (blackKingMoved)
+            return false;
+        if (blackLeftRookMoved)
+            return false;
+        if (!grid[0][1].empty())
+            return false;
+        if (!grid[0][2].empty())
+            return false;
+        if (!grid[0][3].empty())
+            return false;
+        if (isSquareUnderAttack(0, 4, true))
+            return false;
+        if (isSquareUnderAttack(0, 3, true))
+            return false;
+        if (isSquareUnderAttack(0, 2, true))
+            return false;
+        return true;
+    }
 }
 
 std::vector<std::pair<int, int>> Board::getLegalMoves(int row, int col) const {
@@ -80,7 +211,23 @@ std::vector<std::pair<int, int>> Board::getLegalMoves(int row, int col) const {
     }
 
     if (piece == "WhiteKing" || piece == "BlackKing") {
-        return King::getLegalMoves(grid, row, col);
+        auto moves = King::getLegalMoves(grid, row, col);
+
+        if (piece == "WhiteKing") {
+            if (canCastleKingside(true))
+                moves.push_back({7, 6});
+            if (canCastleQueenside(true))
+                moves.push_back({7, 2});
+        }
+
+        else {
+            if (canCastleKingside(false))
+                moves.push_back({0, 6});
+            if (canCastleQueenside(false))
+                moves.push_back({0, 2});
+        }
+
+        return moves;
     }
 
     return {};
