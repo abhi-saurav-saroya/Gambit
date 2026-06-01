@@ -139,6 +139,10 @@ int main() {
                                 if (board.isCheckmate(board.isWhiteTurn())) {
                                     board.setGameOver(board.isWhiteTurn() ? "Black" : "White");
                                 }
+
+                                else if (board.isStalemate(board.isWhiteTurn())) {
+                                    board.setGameOver("Draw");
+                                }
                             }
                         
                             // clicked somewhere else

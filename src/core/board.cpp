@@ -569,3 +569,36 @@ void Board::promoteTo(const std::string& pieceName) {
     promotionRow = -1;
     promotionCol = -1;
 }
+
+bool Board::isStalemate(bool white) {
+    if (isKingInCheck(white)) {
+        return false;
+    }
+
+    // Search every piece
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            std::string piece = grid[row][col];
+
+            if (piece.empty()) {
+                continue;
+            }
+
+            bool isWhitePiece = (piece[0] == 'W');
+
+            if (isWhitePiece != white) {
+                continue;
+            }
+
+            auto moves = getLegalMoves(row, col);
+
+            for (auto [toRow, toCol] : moves) {
+                if (isLegalMove(row, col, toRow, toCol)) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}

@@ -54,6 +54,8 @@ class Board {
 
         bool canCastleKingside(bool white) const;
         bool canCastleQueenside(bool white) const;
+
+        bool isStalemate(bool white);
     
     private:
         std::vector<std::vector<std::string>> grid;

@@ -304,7 +304,12 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         // CHECKMATE title
         sf::Text title(font);
 
-        title.setString("CHECKMATE");
+        if (board.getWinner() == "Draw") {
+            title.setString("STALEMATE");
+        }
+        else {
+            title.setString("CHECKMATE");
+        }
 
         title.setCharacterSize(56);
 
@@ -323,9 +328,14 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         // Winner text
         sf::Text winnerText(font);
 
-        winnerText.setString(
-            board.getWinner() + " Wins!"
-        );
+        if (board.getWinner() == "Draw") {
+            winnerText.setString("Draw");
+        }
+        else {
+            winnerText.setString(
+                board.getWinner() + " Wins!"
+            );
+        }
 
         winnerText.setCharacterSize(34);
 
