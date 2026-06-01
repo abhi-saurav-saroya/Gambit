@@ -93,6 +93,50 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         window.draw(circle);
     }
 
+    // HIGHLIGHT LAST MOVE
+    auto [fromRow, fromCol] = board.getLastMoveFrom();
+    auto [toRow, toCol] = board.getLastMoveTo();
+
+    if (fromRow != -1) {
+        sf::RectangleShape highlight(
+            sf::Vector2f(
+                (float)TILE_SIZE,
+                (float)TILE_SIZE
+            )
+        );
+
+        highlight.setPosition({
+            (float)(OFFSET_X + fromCol * TILE_SIZE),
+            (float)(OFFSET_Y + fromRow * TILE_SIZE)
+        });
+
+        highlight.setFillColor(
+            sf::Color(186, 202, 43, 120)
+        );
+
+        window.draw(highlight);
+    }
+
+    if (toRow != -1) {
+        sf::RectangleShape highlight(
+            sf::Vector2f(
+                (float)TILE_SIZE,
+                (float)TILE_SIZE
+            )
+        );
+
+        highlight.setPosition({
+            (float)(OFFSET_X + toCol * TILE_SIZE),
+            (float)(OFFSET_Y + toRow * TILE_SIZE)
+        });
+
+        highlight.setFillColor(
+            sf::Color(80, 140, 255, 110)
+        );
+
+        window.draw(highlight);
+    }
+
     // DRAW PIECES
     for (int row = 0; row < 8; row++) {
         for (int col = 0; col < 8; col++) {

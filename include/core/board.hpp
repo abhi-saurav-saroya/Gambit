@@ -56,6 +56,9 @@ class Board {
         bool canCastleQueenside(bool white) const;
 
         bool isStalemate(bool white);
+
+        std::pair<int,int> getLastMoveFrom() const;
+        std::pair<int,int> getLastMoveTo() const;
     
     private:
         std::vector<std::vector<std::string>> grid;
@@ -82,4 +85,9 @@ class Board {
         bool enPassantAvailable;
         int enPassantRow;
         int enPassantCol;
+
+        int lastFromRow;
+        int lastFromCol;
+        int lastToRow;
+        int lastToCol;
 };

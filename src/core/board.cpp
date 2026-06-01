@@ -25,6 +25,10 @@ Board::Board() {
     enPassantAvailable = false;
     enPassantRow = -1;
     enPassantCol = -1;
+    lastFromRow = -1;
+    lastFromCol = -1;
+    lastToRow = -1;
+    lastToCol = -1;
 
     grid = {
         {"BlackRook","BlackKnight","BlackBishop","BlackQueen","BlackKing","BlackBishop","BlackKnight","BlackRook"},
@@ -61,6 +65,11 @@ std::pair<int,int> Board::getSelection() const {
 }
 
 void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+    lastFromRow = fromRow;
+    lastFromCol = fromCol;
+    lastToRow = toRow;
+    lastToCol = toCol;
+
     bool oldEnPassantAvailable = enPassantAvailable;
     int oldEnPassantRow = enPassantRow;
     int oldEnPassantCol = enPassantCol;
@@ -601,4 +610,12 @@ bool Board::isStalemate(bool white) {
     }
 
     return true;
+}
+
+std::pair<int,int> Board::getLastMoveFrom() const {
+    return {lastFromRow, lastFromCol};
+}
+
+std::pair<int,int> Board::getLastMoveTo() const {
+    return {lastToRow, lastToCol};
 }
