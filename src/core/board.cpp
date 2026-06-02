@@ -80,6 +80,15 @@ void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
 
     std::string piece = grid[fromRow][fromCol];
 
+    std::string capturedPiece = grid[toRow][toCol];
+    if (!capturedPiece.empty()) {
+        bool movingWhite = (piece[0] == 'W');
+        if (movingWhite)
+            whiteCaptures.push_back(capturedPiece);
+        else
+            blackCaptures.push_back(capturedPiece);
+    }
+
     grid[toRow][toCol] = piece;
     grid[fromRow][fromCol] = "";
 
@@ -618,4 +627,12 @@ std::pair<int,int> Board::getLastMoveFrom() const {
 
 std::pair<int,int> Board::getLastMoveTo() const {
     return {lastToRow, lastToCol};
+}
+
+const std::vector<std::string>& Board::getWhiteCaptures() const {
+    return whiteCaptures;
+}
+
+const std::vector<std::string>& Board::getBlackCaptures() const {
+    return blackCaptures;
 }

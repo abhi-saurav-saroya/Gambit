@@ -59,6 +59,9 @@ class Board {
 
         std::pair<int,int> getLastMoveFrom() const;
         std::pair<int,int> getLastMoveTo() const;
+
+        const std::vector<std::string>& getWhiteCaptures() const;
+        const std::vector<std::string>& getBlackCaptures() const;
     
     private:
         std::vector<std::vector<std::string>> grid;
@@ -90,4 +93,7 @@ class Board {
         int lastFromCol;
         int lastToRow;
         int lastToCol;
+
+        std::vector<std::string> whiteCaptures;
+        std::vector<std::string> blackCaptures;
 };

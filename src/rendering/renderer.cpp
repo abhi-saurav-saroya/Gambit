@@ -456,4 +456,125 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         window.draw(exitText);
     } 
 
+    // CAPTURED PIECES SECTION
+    sf::RectangleShape whitePanel(
+        sf::Vector2f(120.f, 500.f)
+    );
+    whitePanel.setPosition({
+        OFFSET_X - 160.f,
+        OFFSET_Y + 100.f
+    });
+    whitePanel.setFillColor(
+        sf::Color(45, 45, 45)
+    );
+    whitePanel.setOutlineThickness(2.f);
+    whitePanel.setOutlineColor(
+        sf::Color(180, 180, 180)
+    );
+    window.draw(whitePanel);
+
+    sf::RectangleShape blackPanel(
+        sf::Vector2f(120.f, 500.f)
+    );
+    blackPanel.setPosition({
+        OFFSET_X + TILE_SIZE * 8 + 40.f,
+        OFFSET_Y + 100.f
+    });
+    blackPanel.setFillColor(
+        sf::Color(45, 45, 45)
+    );
+    blackPanel.setOutlineThickness(2.f);
+    blackPanel.setOutlineColor(
+        sf::Color(180, 180, 180)
+    );
+    window.draw(blackPanel);
+
+    sf::Text whiteText(font);
+    whiteText.setString("White");
+    whiteText.setCharacterSize(20);
+    float whitePanelCenterX = (OFFSET_X - 160.f) + 60.f;   // panel width 120
+    float whiteWidth = whiteText.getLocalBounds().size.x;
+    whiteText.setPosition({
+        whitePanelCenterX - whiteWidth / 2.f,
+        OFFSET_Y + 115.f
+    });
+    window.draw(whiteText);
+
+    sf::Text capturesTextWhite(font);
+    capturesTextWhite.setString("Captures");
+    capturesTextWhite.setCharacterSize(20);
+    float capturesWhiteWidth = capturesTextWhite.getLocalBounds().size.x;
+    capturesTextWhite.setPosition({
+        whitePanelCenterX - capturesWhiteWidth / 2.f,
+        OFFSET_Y + 140.f
+    });
+    window.draw(capturesTextWhite);
+
+    sf::Text blackText(font);
+    blackText.setString("Black");
+    blackText.setCharacterSize(20);
+    float blackPanelCenterX = (OFFSET_X + TILE_SIZE * 8 + 40.f) + 60.f;
+    float blackWidth = blackText.getLocalBounds().size.x;
+    blackText.setPosition({
+        blackPanelCenterX - blackWidth / 2.f,
+        OFFSET_Y + 115.f
+    });
+    window.draw(blackText);
+
+    sf::Text capturesTextBlack(font);
+    capturesTextBlack.setString("Captures");
+    capturesTextBlack.setCharacterSize(20);
+    float capturesBlackWidth = capturesTextBlack.getLocalBounds().size.x;
+    capturesTextBlack.setPosition({
+        blackPanelCenterX - capturesBlackWidth / 2.f,
+        OFFSET_Y + 140.f
+    });
+    window.draw(capturesTextBlack);
+
+    float whiteStartX = OFFSET_X - 140.f;
+    float whiteStartY = OFFSET_Y + 190.f;
+
+    int whiteCount = 0;
+    for (const auto& piece : board.getWhiteCaptures()) {
+        if (!textures.count(piece))
+            continue;
+
+        sf::Sprite sprite(textures[piece]);
+
+        float x = whiteStartX + (whiteCount % 2) * 50.f;
+        float y = whiteStartY + (whiteCount / 2) * 50.f;
+
+        sprite.setPosition({x, y});
+        sprite.setScale({
+            0.8f,
+            0.8f
+        });
+
+        window.draw(sprite);
+        whiteCount++;
+    }
+
+    float blackStartX = OFFSET_X + TILE_SIZE * 8 + 50.f;
+    float blackStartY = OFFSET_Y + 190.f;
+    
+    int blackCount = 0;
+    for (const auto& piece : board.getBlackCaptures()) {
+        if (!textures.count(piece))
+            continue;
+    
+        sf::Sprite sprite(textures[piece]);
+    
+        float x = blackStartX + (blackCount % 2) * 50.f;
+        float y = blackStartY + (blackCount / 2) * 50.f;
+    
+        sprite.setPosition({x, y});
+        sprite.setScale({
+            0.8f,
+            0.8f
+        });
+    
+        window.draw(sprite);
+        blackCount++;
+    }
+
 }
