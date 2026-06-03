@@ -65,6 +65,7 @@ class Board {
 
         const std::vector<std::string>& getMoveHistory() const;
         std::string squareToNotation(int row, int col) const;
+        std::string getPieceName(const std::string& piece) const;
     
     private:
         std::vector<std::vector<std::string>> grid;

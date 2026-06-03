@@ -79,13 +79,25 @@ void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
     enPassantCol = -1;
 
     std::string piece = grid[fromRow][fromCol];
+    bool capture = !grid[toRow][toCol].empty();
 
-    std::string moveText =
-        squareToNotation(fromRow, fromCol)
-        + "-"
-        + squareToNotation(toRow, toCol);
-    
-    moveHistory.push_back(moveText);
+    std::string moveText;
+    if (capture) {
+        moveText =
+            getPieceName(piece)
+            + ": "
+            + squareToNotation(fromRow, fromCol)
+            + " x "
+            + squareToNotation(toRow, toCol);
+    }
+    else {
+        moveText =
+            getPieceName(piece)
+            + ": "
+            + squareToNotation(fromRow, fromCol)
+            + " -> "
+            + squareToNotation(toRow, toCol);
+    }
 
     std::string capturedPiece = grid[toRow][toCol];
     if (!capturedPiece.empty()) {
@@ -167,6 +179,15 @@ void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
             enPassantCol = fromCol;
         }
     }
+
+    bool enemyWhite = !isWhiteTurn();
+    if (isCheckmate(enemyWhite)) {
+        moveText += " #";
+    }
+    else if (isKingInCheck(enemyWhite)) {
+        moveText += " +";
+    }
+    moveHistory.push_back(moveText);
 }
 
 bool Board::canCastleKingside(bool white) const {
@@ -653,4 +674,26 @@ std::string Board::squareToNotation(int row, int col) const {
     char rank = '8' - row;
 
     return std::string(1, file) + std::string(1, rank);
+}
+
+std::string Board::getPieceName(const std::string& piece) const {
+    if (piece.find("Pawn") != std::string::npos)
+        return "Pawn";
+
+    if (piece.find("Knight") != std::string::npos)
+        return "Knight";
+
+    if (piece.find("Bishop") != std::string::npos)
+        return "Bishop";
+
+    if (piece.find("Rook") != std::string::npos)
+        return "Rook";
+
+    if (piece.find("Queen") != std::string::npos)
+        return "Queen";
+
+    if (piece.find("King") != std::string::npos)
+        return "King";
+
+    return "Unknown";
 }
