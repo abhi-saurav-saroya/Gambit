@@ -80,6 +80,13 @@ void Board::movePiece(int fromRow, int fromCol, int toRow, int toCol) {
 
     std::string piece = grid[fromRow][fromCol];
 
+    std::string moveText =
+        squareToNotation(fromRow, fromCol)
+        + "-"
+        + squareToNotation(toRow, toCol);
+    
+    moveHistory.push_back(moveText);
+
     std::string capturedPiece = grid[toRow][toCol];
     if (!capturedPiece.empty()) {
         bool movingWhite = (piece[0] == 'W');
@@ -635,4 +642,15 @@ const std::vector<std::string>& Board::getWhiteCaptures() const {
 
 const std::vector<std::string>& Board::getBlackCaptures() const {
     return blackCaptures;
+}
+
+const std::vector<std::string>& Board::getMoveHistory() const {
+    return moveHistory;
+}
+
+std::string Board::squareToNotation(int row, int col) const {
+    char file = 'a' + col;
+    char rank = '8' - row;
+
+    return std::string(1, file) + std::string(1, rank);
 }

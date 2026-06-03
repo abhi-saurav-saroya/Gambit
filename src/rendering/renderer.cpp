@@ -461,7 +461,7 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         sf::Vector2f(120.f, 500.f)
     );
     whitePanel.setPosition({
-        OFFSET_X - 160.f,
+        OFFSET_X + TILE_SIZE * 8 + 180.f,
         OFFSET_Y + 100.f
     });
     whitePanel.setFillColor(
@@ -492,7 +492,7 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
     sf::Text whiteText(font);
     whiteText.setString("White");
     whiteText.setCharacterSize(20);
-    float whitePanelCenterX = (OFFSET_X - 160.f) + 60.f;   // panel width 120
+    float whitePanelCenterX = (OFFSET_X + TILE_SIZE * 8 + 180.f) + 60.f;
     float whiteWidth = whiteText.getLocalBounds().size.x;
     whiteText.setPosition({
         whitePanelCenterX - whiteWidth / 2.f,
@@ -531,7 +531,7 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
     });
     window.draw(capturesTextBlack);
 
-    float whiteStartX = OFFSET_X - 140.f;
+    float whiteStartX = OFFSET_X + TILE_SIZE * 8 + 200.f;
     float whiteStartY = OFFSET_Y + 190.f;
 
     int whiteCount = 0;
@@ -575,6 +575,54 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
     
         window.draw(sprite);
         blackCount++;
+    }
+
+    // MOVES HISTORY PANEL
+    float historyX = 20.f;
+    float historyY = OFFSET_Y + 100.f;
+
+    sf::RectangleShape historyPanel(
+        sf::Vector2f(220.f, 600.f)
+    );
+    historyPanel.setPosition({
+        historyX,
+        historyY
+    });
+    historyPanel.setFillColor(
+        sf::Color(45, 45, 45)
+    );
+    historyPanel.setOutlineThickness(2.f);
+    historyPanel.setOutlineColor(
+        sf::Color(180, 180, 180)
+    );
+    window.draw(historyPanel);
+    
+    sf::Text historyTitle(font);
+    historyTitle.setString("Move History");
+    historyTitle.setCharacterSize(22);
+    float historyTitleWidth = historyTitle.getLocalBounds().size.x;
+    historyTitle.setPosition({
+        historyX + 110.f - historyTitleWidth / 2.f,
+        historyY + 15.f
+    });
+    window.draw(historyTitle);
+
+    const auto& history = board.getMoveHistory();
+    float startY = historyY + 55.f;
+
+    for (size_t i = 0; i < history.size(); i++) {
+        sf::Text moveText(font);
+        moveText.setCharacterSize(18);
+        moveText.setString(
+            std::to_string(i + 1)
+            + ". "
+            + history[i]
+        );
+        moveText.setPosition({
+            historyX + 15.f,
+            startY + i * 24.f
+        });
+        window.draw(moveText);
     }
 
 }

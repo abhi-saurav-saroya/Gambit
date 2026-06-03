@@ -62,6 +62,9 @@ class Board {
 
         const std::vector<std::string>& getWhiteCaptures() const;
         const std::vector<std::string>& getBlackCaptures() const;
+
+        const std::vector<std::string>& getMoveHistory() const;
+        std::string squareToNotation(int row, int col) const;
     
     private:
         std::vector<std::vector<std::string>> grid;
@@ -96,4 +99,6 @@ class Board {
 
         std::vector<std::string> whiteCaptures;
         std::vector<std::string> blackCaptures;
+
+        std::vector<std::string> moveHistory;
 };
