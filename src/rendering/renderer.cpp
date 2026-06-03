@@ -610,7 +610,14 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
     const auto& history = board.getMoveHistory();
     float startY = historyY + 55.f;
 
-    for (size_t i = 0; i < history.size(); i++) {
+    const int MAX_VISIBLE_MOVES = 22;
+    size_t startIndex = 0;
+    if (history.size() > MAX_VISIBLE_MOVES) {
+        startIndex = history.size() - MAX_VISIBLE_MOVES;
+    }
+
+    for (size_t i = startIndex; i < history.size(); i++) {
+        size_t visibleIndex = i - startIndex;
         sf::Text moveText(font);
         moveText.setCharacterSize(18);
         moveText.setString(
@@ -620,7 +627,7 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         );
         moveText.setPosition({
             historyX + 15.f,
-            startY + i * 24.f
+            startY + visibleIndex * 24.f
         });
         window.draw(moveText);
     }
