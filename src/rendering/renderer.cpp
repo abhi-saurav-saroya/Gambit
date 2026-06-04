@@ -348,11 +348,14 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         // CHECKMATE title
         sf::Text title(font);
 
-        if (board.getWinner() == "Draw") {
+        if (board.getGameOverReason() == "Checkmate") {
+            title.setString("CHECKMATE");
+        }
+        else if (board.getGameOverReason() == "Stalemate") {
             title.setString("STALEMATE");
         }
-        else {
-            title.setString("CHECKMATE");
+        else if (board.getGameOverReason() == "Resignation") {
+            title.setString("RESIGNATION");
         }
 
         title.setCharacterSize(56);
@@ -372,8 +375,13 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         // Winner text
         sf::Text winnerText(font);
 
-        if (board.getWinner() == "Draw") {
+        if (board.getGameOverReason() == "Stalemate") {
             winnerText.setString("Draw");
+        }
+        else if (board.getGameOverReason() == "Resignation") {
+            winnerText.setString(
+                board.getWinner() + " Wins by Resignation"
+            );
         }
         else {
             winnerText.setString(
@@ -631,5 +639,28 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         });
         window.draw(moveText);
     }
+
+    // RESIGN BUTTON
+    sf::RectangleShape resignButton(
+        sf::Vector2f(180.f, 50.f)
+    );
+    resignButton.setPosition({
+        historyX + 20.f,
+        historyY + 620.f
+    });
+    resignButton.setFillColor(
+        sf::Color(180, 70, 70)
+    );
+    window.draw(resignButton);
+
+    sf::Text resignText(font);
+    resignText.setString("Resign");
+    resignText.setCharacterSize(22);
+    float resignWidth = resignText.getLocalBounds().size.x;
+    resignText.setPosition({
+        historyX + 110.f - resignWidth / 2.f,
+        historyY + 630.f
+    });
+    window.draw(resignText);
 
 }

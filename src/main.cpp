@@ -80,6 +80,28 @@ int main() {
                     int mouseX = mouse->position.x;
                     int mouseY = mouse->position.y;
 
+                    // RESIGN BUTTON
+                    float historyX = 20.f;
+                    float historyY = OFFSET_Y + 100.f;
+
+                    if (!board.isGameOver()) {
+                    
+                        if (mouseX >= historyX + 20.f &&
+                            mouseX <= historyX + 200.f &&
+                            mouseY >= historyY + 620.f &&
+                            mouseY <= historyY + 670.f)
+                        {
+                            if (board.isWhiteTurn()) {
+                                board.setGameOver("Black", "Resignation");
+                            }
+                            else {
+                                board.setGameOver("White", "Resignation");
+                            }
+                        
+                            continue;
+                        }
+                    }
+
                     // GAME OVER BUTTONS
                     if (board.isGameOver()) {
                         int centerX = WINDOW_WIDTH / 2;
@@ -137,11 +159,17 @@ int main() {
                                 board.switchTurn();
                             
                                 if (board.isCheckmate(board.isWhiteTurn())) {
-                                    board.setGameOver(board.isWhiteTurn() ? "Black" : "White");
+                                    board.setGameOver(
+                                        board.isWhiteTurn() ? "Black" : "White",
+                                        "Checkmate"
+                                    );
                                 }
 
                                 else if (board.isStalemate(board.isWhiteTurn())) {
-                                    board.setGameOver("Draw");
+                                    board.setGameOver(
+                                        "Draw",
+                                        "Stalemate"
+                                    );
                                 }
                             }
                         

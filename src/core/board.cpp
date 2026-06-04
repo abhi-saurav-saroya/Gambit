@@ -29,6 +29,7 @@ Board::Board() {
     lastFromCol = -1;
     lastToRow = -1;
     lastToCol = -1;
+    gameOverReason = "";
 
     grid = {
         {"BlackRook","BlackKnight","BlackBishop","BlackQueen","BlackKing","BlackBishop","BlackKnight","BlackRook"},
@@ -696,4 +697,14 @@ std::string Board::getPieceName(const std::string& piece) const {
         return "King";
 
     return "Unknown";
+}
+
+void Board::setGameOver(const std::string& winnerName, const std::string& reason) {
+    gameOver = true;
+    winner = winnerName;
+    gameOverReason = reason;
+}
+
+std::string Board::getGameOverReason() const {
+    return gameOverReason;
 }
