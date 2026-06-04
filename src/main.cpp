@@ -153,8 +153,18 @@ int main() {
                             auto [selRow, selCol] = board.getSelection();
                             // legal move
                             if (board.isLegalMove(selRow, selCol, row, col)) {
-                                board.movePiece(selRow, selCol, row, col);
-                                renderer.playMoveSound();
+                                bool capture = !board.getGrid()[row][col].empty();
+                                board.movePiece(
+                                    selRow,
+                                    selCol,
+                                    row,
+                                    col
+                                );
+                                if (capture)
+                                    renderer.playCaptureSound();
+                                else
+                                    renderer.playMoveSound();
+
                                 board.checkPromotion();
                                 board.clearSelection();
                                 board.clearLegalMoves();

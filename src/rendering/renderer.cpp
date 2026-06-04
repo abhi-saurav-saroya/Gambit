@@ -673,6 +673,15 @@ void Renderer::loadSounds() {
         return;
     }
 
+    if (!captureBuffer.loadFromFile(
+        "assets/sounds/Capture.ogg"
+    )) {
+        std::cerr << "Failed to load Capture.ogg\n";
+    }
+    else {
+        captureSound.emplace(captureBuffer);
+    }
+
     moveSound.emplace(moveBuffer);
 }
 
@@ -680,4 +689,9 @@ void Renderer::playMoveSound() {
     if (moveSound) {
         moveSound->play();
     }
+}
+
+void Renderer::playCaptureSound() {
+    if (captureSound)
+        captureSound->play();
 }
