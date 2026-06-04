@@ -702,6 +702,15 @@ void Renderer::loadSounds() {
     else {
         checkmateSound.emplace(checkmateBuffer);
     }
+
+    if (!drawBuffer.loadFromFile(
+        "assets/sounds/Draw.ogg"
+    )) {
+        std::cerr << "Failed to load Draw.ogg\n";
+    }
+    else {
+        drawSound.emplace(drawBuffer);
+    }
 }
 
 void Renderer::playMoveSound() {
@@ -724,4 +733,9 @@ void Renderer::playCheckSound() {
 void Renderer::playCheckmateSound() {
     if (checkmateSound)
         checkmateSound->play();
+}
+
+void Renderer::playDrawSound() {
+    if(drawSound)
+        drawSound->play();
 }

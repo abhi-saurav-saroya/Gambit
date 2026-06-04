@@ -187,6 +187,7 @@ int main() {
                                 }
 
                                 else if (board.isStalemate(board.isWhiteTurn())) {
+                                    renderer.playDrawSound();
                                     board.setGameOver(
                                         "Draw",
                                         "Stalemate"
