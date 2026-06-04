@@ -15,6 +15,7 @@ public:
     void loadSounds();
     void playMoveSound();
     void playCaptureSound();
+    void playCheckSound();
 
     void render(
         sf::RenderWindow& window,
@@ -33,4 +34,7 @@ private:
 
     sf::SoundBuffer captureBuffer;
     std::optional<sf::Sound> captureSound;
+
+    sf::SoundBuffer checkBuffer;
+    std::optional<sf::Sound> checkSound;
 };

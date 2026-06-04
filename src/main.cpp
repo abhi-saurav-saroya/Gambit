@@ -160,15 +160,21 @@ int main() {
                                     row,
                                     col
                                 );
-                                if (capture)
-                                    renderer.playCaptureSound();
-                                else
-                                    renderer.playMoveSound();
 
                                 board.checkPromotion();
                                 board.clearSelection();
                                 board.clearLegalMoves();
                                 board.switchTurn();
+
+                                if (board.isKingInCheck(board.isWhiteTurn())) {
+                                    renderer.playCheckSound();
+                                }
+                                else if (capture) {
+                                    renderer.playCaptureSound();
+                                }
+                                else {
+                                    renderer.playMoveSound();
+                                }
                             
                                 if (board.isCheckmate(board.isWhiteTurn())) {
                                     board.setGameOver(

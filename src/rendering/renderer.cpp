@@ -672,6 +672,9 @@ void Renderer::loadSounds() {
         std::cerr << "Failed to load Move.ogg\n";
         return;
     }
+    else {
+        moveSound.emplace(moveBuffer);
+    }
 
     if (!captureBuffer.loadFromFile(
         "assets/sounds/Capture.ogg"
@@ -682,7 +685,14 @@ void Renderer::loadSounds() {
         captureSound.emplace(captureBuffer);
     }
 
-    moveSound.emplace(moveBuffer);
+    if (!checkBuffer.loadFromFile(
+        "assets/sounds/Check.ogg"
+    )) {
+        std::cerr << "Failed to load Check.ogg\n";
+    }
+    else {
+        checkSound.emplace(checkBuffer);
+    }
 }
 
 void Renderer::playMoveSound() {
@@ -694,4 +704,10 @@ void Renderer::playMoveSound() {
 void Renderer::playCaptureSound() {
     if (captureSound)
         captureSound->play();
+}
+
+
+void Renderer::playCheckSound() {
+    if (checkSound)
+        checkSound->play();
 }
