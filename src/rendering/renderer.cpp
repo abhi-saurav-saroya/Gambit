@@ -664,3 +664,20 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
     window.draw(resignText);
 
 }
+
+void Renderer::loadSounds() {
+    if (!moveBuffer.loadFromFile(
+        "assets/sounds/Move.ogg"
+    )) {
+        std::cerr << "Failed to load Move.ogg\n";
+        return;
+    }
+
+    moveSound.emplace(moveBuffer);
+}
+
+void Renderer::playMoveSound() {
+    if (moveSound) {
+        moveSound->play();
+    }
+}

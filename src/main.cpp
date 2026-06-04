@@ -28,6 +28,7 @@ int main() {
 
     renderer.loadTextures();
     renderer.loadFonts();
+    renderer.loadSounds();
 
     // MAIN GAME LOOP
     while (window.isOpen()) {
@@ -153,6 +154,7 @@ int main() {
                             // legal move
                             if (board.isLegalMove(selRow, selCol, row, col)) {
                                 board.movePiece(selRow, selCol, row, col);
+                                renderer.playMoveSound();
                                 board.checkPromotion();
                                 board.clearSelection();
                                 board.clearLegalMoves();

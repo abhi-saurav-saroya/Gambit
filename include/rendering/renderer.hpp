@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <map>
 #include <optional>
 #include <string>
@@ -11,6 +12,8 @@ public:
 
     void loadTextures();
     void loadFonts();
+    void loadSounds();
+    void playMoveSound();
 
     void render(
         sf::RenderWindow& window,
@@ -23,4 +26,6 @@ public:
 private:
     std::map<std::string, sf::Texture> textures;
     sf::Font font;
+    sf::SoundBuffer moveBuffer;
+    std::optional<sf::Sound> moveSound;
 };
