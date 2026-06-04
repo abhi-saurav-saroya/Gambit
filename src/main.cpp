@@ -166,7 +166,10 @@ int main() {
                                 board.clearLegalMoves();
                                 board.switchTurn();
 
-                                if (board.isKingInCheck(board.isWhiteTurn())) {
+                                if (board.isCheckmate(board.isWhiteTurn())) {
+                                    renderer.playCheckmateSound();
+                                }
+                                else if (board.isKingInCheck(board.isWhiteTurn())) {
                                     renderer.playCheckSound();
                                 }
                                 else if (capture) {
