@@ -3,10 +3,6 @@ build/*
 *.exe
 *.out
 
-# CMake
-CMakeFiles/
-CMakeLists.txt
-
 # VS Code
 .vscode/*
 
