@@ -1,5 +1,7 @@
 #include "rendering/Renderer.hpp"
 #include <iostream>
+#include <cmath>
+#include <SFML/System/Clock.hpp>
 
 Renderer::Renderer() {
     // nothing yet
@@ -295,6 +297,10 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
     if (board.isKingInCheck(board.isWhiteTurn())) {
         auto [kr, kc] = board.findKing(board.isWhiteTurn());
 
+        static sf::Clock pulseClock;
+        float time = pulseClock.getElapsedTime().asSeconds();
+        float pulse = 100.f + std::sin(time * 4.f) * 50.f;
+
         sf::RectangleShape checkHighlight(
             sf::Vector2f((float)TILE_SIZE, (float)TILE_SIZE)
         );
@@ -303,7 +309,14 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
             static_cast<float>(OFFSET_X + kc * TILE_SIZE),
             static_cast<float>(OFFSET_Y + kr * TILE_SIZE)
         });
-        checkHighlight.setFillColor(sf::Color(255, 50, 50, 140));
+        checkHighlight.setFillColor(
+            sf::Color(
+                255,
+                50,
+                50,
+                static_cast<std::uint8_t>(pulse)
+            )
+        );
 
         window.draw(checkHighlight);
     }
