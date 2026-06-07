@@ -58,6 +58,52 @@ void Renderer::render(sf::RenderWindow& window, const Board& board, int OFFSET_X
         }
     }
 
+    // BOARD FILES (a-h)
+    for (int col = 0; col < 8; col++) {
+        sf::Text fileText(font);
+        fileText.setCharacterSize(18);
+
+        std::string letter(
+            1,
+            static_cast<char>('a' + col)
+        );
+        fileText.setString(letter);
+
+        float textWidth = fileText.getLocalBounds().size.x;
+
+        fileText.setPosition({
+            OFFSET_X + col * TILE_SIZE
+                + TILE_SIZE / 2.f
+                - textWidth / 2.f,
+
+            OFFSET_Y + TILE_SIZE * 8 + 5.f
+        });
+
+        window.draw(fileText);
+    }
+
+    // BOARD RANKS (8-1)
+    for (int row = 0; row < 8; row++) {
+        sf::Text rankText(font);
+        rankText.setCharacterSize(18);
+
+        rankText.setString(
+            std::to_string(8 - row)
+        );
+
+        float textHeight = rankText.getLocalBounds().size.y;
+
+        rankText.setPosition({
+            OFFSET_X - 20.f,
+
+            OFFSET_Y + row * TILE_SIZE
+                + TILE_SIZE / 2.f
+                - textHeight / 2.f
+        });
+
+        window.draw(rankText);
+    }
+
     // HIGHLIGHT SELECTED SQUARE
     if (board.hasSelection()) {
         auto [selRow, selCol] = board.getSelection();
