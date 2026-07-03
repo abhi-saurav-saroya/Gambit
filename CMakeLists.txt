@@ -10,6 +10,7 @@ add_executable(Gambit
     src/core/board.cpp
     src/rendering/renderer.cpp
     src/input/inputHandler.cpp
+    src/pieces/move_gen.cpp
     src/pieces/pawn.cpp
     src/pieces/knight.cpp
     src/pieces/rook.cpp
