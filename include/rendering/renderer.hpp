@@ -4,7 +4,7 @@
 #include <map>
 #include <optional>
 #include <string>
-#include "core/Board.hpp"
+#include "core/board.hpp"
 
 class Renderer {
 public:

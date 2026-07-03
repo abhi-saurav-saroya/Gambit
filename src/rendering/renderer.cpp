@@ -1,4 +1,4 @@
-#include "rendering/Renderer.hpp"
+#include "rendering/renderer.hpp"
 #include <iostream>
 #include <cmath>
 #include <SFML/System/Clock.hpp>

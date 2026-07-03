@@ -1,4 +1,4 @@
-#include "input/InputHandler.hpp"
+#include "input/inputHandler.hpp"
 
 bool InputHandler::getBoardSquare(
     const sf::RenderWindow& window,
