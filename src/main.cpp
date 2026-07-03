@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include "core/Board.hpp"
-#include "rendering/Renderer.hpp"
-#include "input/InputHandler.hpp"
+#include "core/board.hpp"
+#include "rendering/renderer.hpp"
+#include "input/inputHandler.hpp"
 #include <iostream>
 #include <string>
 

@@ -7,9 +7,9 @@ find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System Audio)
 
 add_executable(Gambit
     src/main.cpp
-    src/core/Board.cpp
-    src/rendering/Renderer.cpp
-    src/input/InputHandler.cpp
+    src/core/board.cpp
+    src/rendering/renderer.cpp
+    src/input/inputHandler.cpp
     src/pieces/pawn.cpp
     src/pieces/knight.cpp
     src/pieces/rook.cpp

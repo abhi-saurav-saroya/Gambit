@@ -1,4 +1,4 @@
-#include "core/Board.hpp"
+#include "core/board.hpp"
 #include "pieces/pawn.hpp"
 #include "pieces/knight.hpp"
 #include "pieces/rook.hpp"
