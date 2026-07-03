@@ -1,0 +1,33 @@
+name: archcheck
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  archcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install archcheck
+        env:
+          ARCHCHECK_VERSION: v0.1.6          # pinned by tag, not `latest`
+          GH_TOKEN: ${{ github.token }}       # required by `gh release download`
+        run: |
+          asset="archcheck-${ARCHCHECK_VERSION#v}-linux-x86_64-static.tar.gz"
+          cd /tmp
+          gh release download "$ARCHCHECK_VERSION" --repo blurman-ai/archcheck --pattern "$asset"
+          gh release download "$ARCHCHECK_VERSION" --repo blurman-ai/archcheck --pattern "$asset.sha256"
+          sha256sum -c "$asset.sha256"        # fails if the binary was tampered with
+          tar -xzf "$asset"
+          sudo install -m 0755 archcheck /usr/local/bin/archcheck
+          archcheck --version
+
+      - name: Architecture gate
+        # Exit 1 on a gated finding: include cycles (SF.9) or case-sensitive
+        # include mismatches (CASE_MISMATCH_INCLUDE). Structural/hygiene
+        # findings are advisory and do not fail the job.
+        run: archcheck .
